@@ -1,0 +1,77 @@
+# ================================================
+# .NET & Selenium Automation Project .gitignore
+# ================================================
+
+# Build results
+bin/
+obj/
+out/
+TestResults/
+*.log
+
+# Rider / Visual Studio / VS Code settings
+.vs/
+.idea/
+.vscode/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.cache
+*.config
+*.pdb
+*.mdb
+*.dbmdl
+
+# Logs & reports
+logs/
+Reports/
+*.trx
+*.xml
+*.json
+
+# Temporary files
+~$*
+*.tmp
+*.temp
+*.bak
+
+# NuGet packages (restore automatically)
+packages/
+*.nupkg
+*.snupkg
+
+# Selenium drivers (should not be versioned)
+chromedriver.exe
+geckodriver.exe
+msedgedriver.exe
+drivers/
+
+# OS-specific
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Test artifacts
+*.swp
+*.swn
+
+# Environment or secrets (config)
+.env
+appsettings.Development.json
+secrets.json
+*.swo
+*.stackdump
