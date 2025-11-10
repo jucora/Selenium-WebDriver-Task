@@ -6,19 +6,19 @@ namespace CarrierSearch.Tests
     [TestFixture]
     public class CarrierSearchTests : CarrierSearchTestHelper
     {
-        [TestCase("https://www.epam.com/", "Python", "All Locations")]
-        [TestCase("https://www.epam.com/", "Java", "All Locations")]
-        [TestCase("https://www.epam.com/", "C#", "All Locations")]
-        public void ValidateUserCanSearchPositionBasedOnCriteria(string url, string keyword, string location)
+        [TestCase("Python")]
+        [TestCase("Java")]
+        [TestCase("C#")]
+        public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
         {
-            navigateToUrl(url);
-            clickCarriersLink();
-            enterKeyword(keyword);
-            selectLocation(location);
-            selectRemoteOption();
-            clickFindButton();
-            selectViewAndApplyFromLastResult();
-            validateKeywordIsPresent(keyword);
+            NavigateToUrl();
+            ClickCarriersLink();
+            EnterKeyword(keyword);
+            SelectLocation();
+            SelectRemoteOption();
+            ClickFindButton();
+            SelectViewAndApplyFromLastResult();
+            ValidateKeywordIsPresent(keyword);
         }
     }
 }

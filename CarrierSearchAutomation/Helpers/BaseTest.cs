@@ -3,12 +3,13 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Carrier_Search_Automation.Helpers
+namespace Base_Search_Automation.Helpers
 {
-    public class Search
+    public class BaseTest
     {
         protected IWebDriver driver;
         protected WebDriverWait wait;
+        private const string BaseUrl = "https://www.epam.com/";
 
         [SetUp]
         public void Setup()
@@ -23,9 +24,9 @@ namespace Carrier_Search_Automation.Helpers
             driver.Quit();
         }
     
-    protected void navigateToUrl(string url)
+    protected void NavigateToUrl()
         {
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl(BaseUrl);
         }
     }
 }

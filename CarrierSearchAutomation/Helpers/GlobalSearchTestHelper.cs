@@ -1,13 +1,13 @@
-﻿using Carrier_Search_Automation.Locators;
+﻿using Base_Search_Automation.Helpers;
+using Global_Search_Automation.Locators;
 using NUnit.Framework;
-using OpenQA.Selenium;
 using SeleniumExtras.WaitHelpers;
 
-namespace Carrier_Search_Automation.Helpers
+namespace Global_Search_Automation.Helpers
 {
-    public class GlobalSearchTestHelper : Search
+    public class GlobalSearchTestHelper : BaseTest
     {
-        protected void clickMagnifier()
+        protected void ClickMagnifierIcon()
         {
             var magnifier = wait.Until(ExpectedConditions.ElementToBeClickable(
                 GlobalSearchLocator.MagnifierIcon
@@ -15,7 +15,7 @@ namespace Carrier_Search_Automation.Helpers
             magnifier.Click();
         }
 
-        protected void enterSearchKeyword(string keyword)
+        protected void EnterSearchKeyword(string keyword)
         {
             var searchInput = wait.Until(ExpectedConditions.ElementIsVisible(
                 GlobalSearchLocator.SearchInputField
@@ -23,13 +23,13 @@ namespace Carrier_Search_Automation.Helpers
             searchInput.SendKeys(keyword);
         }
 
-        protected void clickFindButton()
+        protected void ClickFindButton()
         {
             var findButton = driver.FindElement(GlobalSearchLocator.FindButton);
             findButton.Click();
         }
 
-        protected void validateLinkTexts(string keyword)
+        protected void ValidateLinkTexts(string keyword)
         {
             var links = wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(
                 GlobalSearchLocator.SearchResultLinks

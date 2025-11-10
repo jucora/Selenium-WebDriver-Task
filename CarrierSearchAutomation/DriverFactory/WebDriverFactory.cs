@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using System;
 
 namespace CarrierSearchAutomation.Drivers
 {
@@ -16,7 +15,6 @@ namespace CarrierSearchAutomation.Drivers
             };
 
             driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10); // Espera implícita
             return driver;
         }
     }
