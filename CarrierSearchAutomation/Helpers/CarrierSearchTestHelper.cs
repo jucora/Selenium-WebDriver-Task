@@ -1,4 +1,5 @@
-﻿using Carrier_Search_Automation.Locators;
+﻿using Base_Search_Automation.Helpers;
+using Carrier_Search_Automation.Locators;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using SeleniumExtras.WaitHelpers;
@@ -27,6 +28,7 @@ namespace Carrier_Search_Automation.Helpers
 
         protected void SelectLocation()
         {
+            CarrierSearchLocator.setLocation(Location);
             var locationDropdown = wait.Until(ExpectedConditions.ElementToBeClickable(
                 CarrierSearchLocator.LocationDropdown
             ));
@@ -37,10 +39,10 @@ namespace Carrier_Search_Automation.Helpers
             {
                 locationDropdown.Click();
 
-                var allLocationsOption = wait.Until(ExpectedConditions.ElementToBeClickable(
-                    By.XPath($"//li[contains(@class, 'select2-results__option') and normalize-space(text())='{Location}']")
+                var locationsOption = wait.Until(ExpectedConditions.ElementToBeClickable(
+                    CarrierSearchLocator.LocationField
                 ));
-                allLocationsOption.Click();
+                locationsOption.Click();
             }
         }
 

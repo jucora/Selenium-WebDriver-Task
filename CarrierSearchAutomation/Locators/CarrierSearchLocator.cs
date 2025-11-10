@@ -4,11 +4,16 @@ namespace Carrier_Search_Automation.Locators
 {
     public static class CarrierSearchLocator
     {
+        private static string selectedLocation = string.Empty;
+
         public static readonly By CarriersLink =
             By.CssSelector("ul:nth-child(1) > li:nth-child(5) > span:nth-child(1) > a:nth-child(1)");
 
         public static readonly By KeywordsField = 
             By.CssSelector("#new_form_job_search-keyword");
+
+        public static readonly By LocationField =
+            By.XPath($"//li[contains(@class, 'select2-results__option') and normalize-space(text())='{selectedLocation}']");
 
         public static readonly By LocationDropdown = 
             By.CssSelector(".select2-selection__rendered");
@@ -21,5 +26,10 @@ namespace Carrier_Search_Automation.Locators
 
         public static readonly By JobResults = 
             By.XPath("//a[contains(text(),'View and apply')]");
+
+        public static void setLocation(string location) 
+        {
+            selectedLocation = location;
+        }
     }
 }
