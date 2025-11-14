@@ -1,5 +1,5 @@
-﻿using Base_Search_Automation.Helpers;
-using Global_Search_Automation.Locators;
+﻿using BaseSearchAutomation.Helpers;
+using GlobalSearchAutomation.Locators;
 using NUnit.Framework;
 using SeleniumExtras.WaitHelpers;
 

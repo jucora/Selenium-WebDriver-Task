@@ -1,10 +1,10 @@
-﻿using Carrier_Search_Automation.Helpers;
+﻿using CareerSearchAutomation.Helpers;
 using NUnit.Framework;
 
-namespace CarrierSearch.Tests
+namespace CareerSearch.Tests
 {
     [TestFixture]
-    public class CarrierSearchTests : CarrierSearchTestHelper
+    public class CareerSearchTests : CareerSearchTestHelper
     {
         [TestCase("Python")]
         [TestCase("Java")]
@@ -12,7 +12,7 @@ namespace CarrierSearch.Tests
         public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
         {
             NavigateToUrl();
-            ClickCarriersLink();
+            ClickCareersLink();
             EnterKeyword(keyword);
             SelectLocation();
             SelectRemoteOption();

@@ -1,18 +1,17 @@
-﻿using Base_Search_Automation.Helpers;
-using Carrier_Search_Automation.Locators;
+﻿using BaseSearchAutomation.Helpers;
+using CareerSearchAutomation.Locators;
 using NUnit.Framework;
-using OpenQA.Selenium;
 using SeleniumExtras.WaitHelpers;
 
-namespace Carrier_Search_Automation.Helpers
+namespace CareerSearchAutomation.Helpers
 {
-    public class CarrierSearchTestHelper : BaseTest
+    public class CareerSearchTestHelper : BaseTest
     {
         private const string Location = "All Locations";
-        protected void ClickCarriersLink()
+        protected void ClickCareersLink()
         {
             var careersLink = wait.Until(ExpectedConditions.ElementToBeClickable(
-                CarrierSearchLocator.CarriersLink
+                CareerSearchLocator.CareersLink
             ));
             careersLink.Click();
         }
@@ -20,7 +19,7 @@ namespace Carrier_Search_Automation.Helpers
         protected void EnterKeyword(string keyword)
         {
             var keywordsField = wait.Until(ExpectedConditions.ElementIsVisible(
-                CarrierSearchLocator.KeywordsField
+                CareerSearchLocator.KeywordsField
             ));
             keywordsField.Clear();
             keywordsField.SendKeys(keyword);
@@ -28,9 +27,9 @@ namespace Carrier_Search_Automation.Helpers
 
         protected void SelectLocation()
         {
-            CarrierSearchLocator.setLocation(Location);
+            CareerSearchLocator.setLocation(Location);
             var locationDropdown = wait.Until(ExpectedConditions.ElementToBeClickable(
-                CarrierSearchLocator.LocationDropdown
+                CareerSearchLocator.LocationDropdown
             ));
 
             string selectedLocation = locationDropdown.Text;
@@ -40,7 +39,7 @@ namespace Carrier_Search_Automation.Helpers
                 locationDropdown.Click();
 
                 var locationsOption = wait.Until(ExpectedConditions.ElementToBeClickable(
-                    CarrierSearchLocator.LocationField
+                    CareerSearchLocator.LocationField
                 ));
                 locationsOption.Click();
             }
@@ -48,20 +47,20 @@ namespace Carrier_Search_Automation.Helpers
 
         protected void SelectRemoteOption()
         {
-            var remoteOption = driver.FindElement(CarrierSearchLocator.RemoteOption);
+            var remoteOption = driver.FindElement(CareerSearchLocator.RemoteOption);
             remoteOption.Click();
         }
 
         protected void ClickFindButton()
         {
-            var findButton = driver.FindElement(CarrierSearchLocator.FindButton);
+            var findButton = driver.FindElement(CareerSearchLocator.FindButton);
             findButton.Click();
         }
 
         protected void SelectViewAndApplyFromLastResult()
         {
             var jobResults = wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(
-                CarrierSearchLocator.JobResults
+                CareerSearchLocator.JobResults
             ));
 
             jobResults[^1].Click();

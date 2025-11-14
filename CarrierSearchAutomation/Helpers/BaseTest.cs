@@ -1,9 +1,9 @@
-﻿using CarrierSearchAutomation.Drivers;
+﻿using CareerSearchAutomation.Drivers;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Base_Search_Automation.Helpers
+namespace BaseSearchAutomation.Helpers
 {
     public class BaseTest
     {

@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace Global_Search_Automation.Locators
+namespace GlobalSearchAutomation.Locators
 {
     public static class GlobalSearchLocator
     {

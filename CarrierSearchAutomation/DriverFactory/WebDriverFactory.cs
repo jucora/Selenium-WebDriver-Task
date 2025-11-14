@@ -2,7 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 
-namespace CarrierSearchAutomation.Drivers
+namespace CareerSearchAutomation.Drivers
 {
     public static class WebDriverFactory
     {
