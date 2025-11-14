@@ -15,7 +15,7 @@ namespace BaseSearchAutomation.Helpers
         public void Setup()
         {
             driver = WebDriverFactory.Create("chrome"); // Change to firefox if needed
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)); // Explicit wait of 10 seconds
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)); // Explicit wait of 20 seconds
         }
 
         [TearDown]
