@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchAutomation", "CareerSearchAutomation\SearchAutomation.csproj", "{D4CA02F9-6F59-4179-B87C-A49D4E776C45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchAutomation", "CarrierSearchAutomation\SearchAutomation.csproj", "{D4CA02F9-6F59-4179-B87C-A49D4E776C45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
