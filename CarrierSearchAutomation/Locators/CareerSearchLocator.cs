@@ -1,10 +1,13 @@
 ﻿using OpenQA.Selenium;
 
-namespace SearchAutomation.Locators
+namespace CareerSearchAutomation.Locators
 {
-    public static class CareerPageLocators
+    public static class CareerSearchLocator
     {
         private static string selectedLocation = string.Empty;
+
+        public static readonly By CareersLink =
+            By.CssSelector("ul:nth-child(1) > li:nth-child(5) > span:nth-child(1) > a:nth-child(1)");
 
         public static readonly By KeywordsField = 
             By.Id("new_form_job_search-keyword");
@@ -20,6 +23,9 @@ namespace SearchAutomation.Locators
 
         public static readonly By FindButton = 
             By.CssSelector("button[type='submit']");
+
+        public static readonly By JobResults = 
+            By.XPath("//a[contains(text(),'View and apply')]");
 
         public static void setLocation(string location) 
         {
