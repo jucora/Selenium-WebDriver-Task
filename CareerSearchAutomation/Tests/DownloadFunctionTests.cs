@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SearchAutomation.Base;
 using SearchAutomation.Pages;
 
-namespace CarrierSearchAutomation.Tests
+namespace SearchAutomation.Tests
 {
     [TestFixture]
     public class DownloadFunctionTests : BaseTest

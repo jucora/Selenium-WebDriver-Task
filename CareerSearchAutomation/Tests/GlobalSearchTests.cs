@@ -15,6 +15,7 @@ namespace SearchAutomation.Tests
         {
             IndexPage indexPage = new IndexPage(driver);
             indexPage
+                .AcceptCookies()
                 .ClickMagnifierIcon()
                 .EnterSearchKeyword(keyword);
 

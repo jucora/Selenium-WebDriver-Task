@@ -47,5 +47,11 @@ namespace SearchAutomation.Pages
             AcceptCookiesIfPresent();
             return this;
         }
+
+        public InsightsPage ClickInsightsLink()
+        {
+            Click(IndexPageLocators.InsightsLink);
+            return new InsightsPage(driver);
+        }
     }
 }

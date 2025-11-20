@@ -12,5 +12,8 @@ namespace SearchAutomation.Locators
 
         public static readonly By AboutLink =
             By.XPath("//a[@class='top-navigation__item-link js-op'][normalize-space()='About']");
+
+        public static readonly By InsightsLink =
+            By.CssSelector("ul[class='top-navigation__row'] li:nth-child(3) span:nth-child(1) a:nth-child(1)");
     }
 }

@@ -3,7 +3,7 @@ using SearchAutomation.Pages;
 using SearchAutomation.Validators;
 using NUnit.Framework;
 
-namespace CareerSearch.Tests
+namespace SearchAutomation.Tests
 {
     [TestFixture]
     public class CareerSearchTests : BaseTest
@@ -14,7 +14,8 @@ namespace CareerSearch.Tests
         public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
         {
             IndexPage indexPage = new IndexPage(driver);
-            
+            indexPage.AcceptCookies();
+
             CareersPage careersPage = indexPage.ClickCareersLink();
             careersPage
                 .EnterKeyword(keyword)
