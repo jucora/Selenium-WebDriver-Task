@@ -6,36 +6,50 @@ namespace SearchAutomation.Pages
     public class InsightsPage : BasePage
     {
         private readonly int numberOfCarouselClicks = 2;
-        public InsightsPage(IWebDriver driver) : base(driver)
-        {
-        }
+        public InsightsPage(IWebDriver driver) : base(driver){}
 
-        public InsightsPage SwipeCarousel() 
+        public InsightsPage SwipeCarousel()
         {
             for (int i = 0; i < numberOfCarouselClicks; i++)
             {
                 Click(InsightsPageLocators.CarouselRightArrow);
-                Thread.Sleep(2000); // Wait 2 seconds between each click to allow the transition
             }
             return this;
         }
 
         public string GetActiveSlideTitle()
         {
-            // 1. Active slide
+            // Capture previous text if it exists
+            string previousTitle = TryGetActiveSlideRawText();
+
+            // Wait for the active slide text to change
+            wait.Until(d =>
+            {
+                string newTitle = TryGetActiveSlideRawText();
+                return newTitle != previousTitle && !string.IsNullOrWhiteSpace(newTitle);
+            });
+
+            // When changed, return clean text
+            return TryGetActiveSlideRawText();
+        }
+
+
+        private string TryGetActiveSlideRawText()
+        {
             var activeSlide = driver.FindElement(InsightsPageLocators.ActiveSlide);
 
-            // 2. Capture all visible SPANs on the slide
-            var spans = activeSlide.FindElements(By.CssSelector("span"))
+            var spans = activeSlide
+                .FindElements(By.CssSelector("span"))
                 .Where(s => s.Displayed)
                 .Select(s => s.Text.Trim())
                 .Where(t => !string.IsNullOrWhiteSpace(t))
                 .ToList();
 
-            // 3. Join all text on a single line
-            string fullTitle = string.Join(" ", spans[0]);
+            if (!spans.Any())
+                return string.Empty;
 
-            return fullTitle.Trim();
+            // spans[0] → title
+            return spans[0];
         }
 
         public void ClickReadMoreLink()
