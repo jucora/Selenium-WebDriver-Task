@@ -1,203 +1,227 @@
-# EPAM Career & Global Search Automation
+# EPAM Search Automation Framework
 
-Test automation project for the EPAM website using Selenium WebDriver with C# and NUnit.
+A comprehensive Selenium-based test automation framework for testing search functionality, career portal, and content management features on the EPAM website.
 
-## 🕵️ Author
+## 👥 Authors
 
-Julian Andres Belmonte Ortiz
+- Julian Andres Belmonte Ortiz
 
-## 📋 Description
+## 🚀 Features
 
-This project contains end-to-end automated tests to validate two main functionalities of the EPAM website:
+- **Page Object Model (POM)** architecture for maintainable test code
+- **Component-based** design for reusable UI elements (Navbar, Cookies)
+- **Multi-browser support** (Chrome and Firefox)
+- **Explicit waits** for reliable element interactions
+- **Parameterized tests** using NUnit
+- **File download validation**
+- **Custom validators** for assertion logic
 
-1. **Career Search**: Search for job positions based on specific criteria (keyword, location, remote option)
-2. **Global Search**: Global website search with result validation
+## 📋 Test Scenarios
 
-## 🛠️ Technologies Used
+### 1. Global Search Tests
+Validates that users can search for keywords across the website and verify search results contain the expected terms.
+- Test cases: BLOCKCHAIN, Cloud, Automation
 
-- **C# / .NET**
-- **Selenium WebDriver 4.x**
-- **NUnit Framework**
-- **SeleniumExtras.WaitHelpers**
-- **ChromeDriver / FirefoxDriver**
+### 2. Career Search Tests
+Tests the career portal functionality including keyword search, location filtering, and remote job options.
+- Test cases: Python, Java, C#
+
+### 3. Download Function Tests
+Verifies that PDF downloads work correctly from the About page.
+
+### 4. Article Title Consistency Tests
+Ensures that carousel slide titles match the corresponding article titles when navigating from Insights.
+
+## 🛠️ Technology Stack
+
+- **Language**: C# (.NET)
+- **Testing Framework**: NUnit
+- **Automation Tool**: Selenium WebDriver
+- **Browser Drivers**: ChromeDriver, GeckoDriver (Firefox)
+- **Additional Libraries**: 
+  - SeleniumExtras.WaitHelpers
+  - DotNetSeleniumExtras.WaitHelpers
 
 ## 📁 Project Structure
 
 ```
-CareerSearchAutomation/
-├── Drivers/
-│   └── WebDriverFactory.cs          # Factory for WebDriver creation
-├── Helpers/
-│   ├── BaseTest.cs                  # Base class with Setup/TearDown
-│   ├── CareerSearchTestHelper.cs    # Helper methods for Career Search
-│   └── GlobalSearchTestHelper.cs    # Helper methods for Global Search
+SearchAutomation/
+├── Base/
+│   └── BaseTest.cs                 # Base test class with setup/teardown
+├── Components/
+│   ├── CookiesComponent.cs         # Cookie banner handling
+│   └── NavbarComponent.cs          # Navigation bar interactions
+├── Core/
+│   ├── ElementActions.cs           # Reusable element interaction methods
+│   ├── WebDriverFactory.cs         # Browser initialization factory
+│   └── Enums/
+│       └── BrowserType.cs          # Supported browser types
 ├── Locators/
-│   ├── CareerSearchLocator.cs       # Locators for Career Search
-│   └── GlobalSearchLocator.cs       # Locators for Global Search
-└── Tests/
-    ├── CareerSearchTests.cs         # Career search tests
-    └── GlobalSearchTests.cs         # Global search tests
+│   ├── Components/                 # Component locators
+│   └── Pages/                      # Page locators
+├── Pages/
+│   ├── BasePage.cs                 # Base page class
+│   ├── CareersPage.cs              # Career search page
+│   ├── SearchPage.cs               # Global search results page
+│   ├── InsightsPage.cs             # Insights/articles page
+│   ├── AboutPage.cs                # About page
+│   └── JobListingsPage.cs          # Job listings page
+├── Tests/
+│   ├── GlobalSearchTests.cs
+│   ├── CareerSearchTests.cs
+│   ├── DownloadFunctionTests.cs
+│   └── ArticleTitleConsistencyTests.cs
+├── Validators/
+│   ├── GlobalSearchValidator.cs
+│   ├── CareerSearchValidator.cs
+│   ├── DownloadFunctionValidator.cs
+│   └── InsightsValidator.cs
+└── Utils/
+    ├── FileUtil.cs                 # File download utilities
+    └── ProjectPaths.cs             # Project path management
 ```
 
-## 🚀 Installation
+## 🔧 Setup Instructions
 
 ### Prerequisites
-
-- .NET SDK 6.0 or higher
-- Visual Studio 2022 / Visual Studio Code / Rider
+- .NET 6.0 or higher
 - Chrome or Firefox browser installed
+- NuGet package manager
 
-### Required NuGet Packages
+### Installation
 
+1. Clone the repository:
 ```bash
-dotnet add package Selenium.WebDriver
-dotnet add package Selenium.WebDriver.ChromeDriver
-dotnet add package Selenium.WebDriver.GeckoDriver
-dotnet add package NUnit
-dotnet add package NUnit3TestAdapter
-dotnet add package DotNetSeleniumExtras.WaitHelpers
+git clone <repository-url>
+cd SearchAutomation
 ```
+
+2. Restore NuGet packages:
+```bash
+dotnet restore
+```
+
+3. Build the project:
+```bash
+dotnet build
+```
+
+## ▶️ Running Tests
+
+### Run all tests:
+```bash
+dotnet test
+```
+
+### Run specific test class:
+```bash
+dotnet test --filter "FullyQualifiedName~GlobalSearchTests"
+```
+
+### Run specific test case:
+```bash
+dotnet test --filter "Name~ValidateUserCanSearchBasedOnCriteria"
+```
+
+### Change browser:
+In `BaseTest.cs`, modify the Setup method:
+```csharp
+driver = WebDriverFactory.Create(BrowserType.Firefox); // Change to Chrome or Firefox
+```
+
+## 📝 Key Components
+
+### BaseTest
+- Initializes WebDriver with browser configuration
+- Sets up explicit waits (20 seconds default)
+- Handles cookie acceptance
+- Manages driver lifecycle (setup/teardown)
+
+### ElementActions
+Core methods for interacting with web elements:
+- `Click(By locator)` - Click on element
+- `Type(By locator, string text)` - Enter text into input field
+- `GetText(By locator)` - Retrieve element text
+- `WaitForElement(By locator)` - Wait for element to be clickable
+
+### WebDriverFactory
+Creates WebDriver instances with custom configurations:
+- Chrome: Configured download directory, disabled prompts
+- Firefox: Custom profile with anti-detection preferences
+
+## 🔍 Test Examples
+
+### Global Search Test
+```csharp
+[TestCase("BLOCKCHAIN")]
+public void ValidateUserCanSearchBasedOnCriteria(string keyword)
+{
+    navbar
+        .ClickMagnifierIcon()
+        .EnterSearchKeyword(keyword);
+
+    SearchPage searchPage = navbar.ClickFindButton();
+    var searchResults = searchPage.GetSearchResults(keyword);
+
+    GlobalSearchValidator.ValidateLinkTexts(searchResults, keyword);
+}
+```
+
+### Career Search Test
+```csharp
+[TestCase("Python")]
+public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
+{
+    CareersPage careersPage = navbar.ClickCareersLink();
+    careersPage
+        .EnterKeyword(keyword)
+        .SelectLocation()
+        .SelectRemoteOption();
+
+    JobListingsPage jobListingsPage = careersPage.ClickFindButton();
+    jobListingsPage.SelectViewAndApplyFromLastResult();
+
+    CareerSearchValidator.ValidateKeywordIsPresent(keyword, driver.PageSource);
+}
+```
+
+## 📦 Downloads
+
+Downloaded files are stored in the `Downloads` folder at the project root. The framework automatically:
+- Creates the download directory if it doesn't exist
+- Waits for file downloads to complete
+- Validates successful downloads
 
 ## ⚙️ Configuration
 
-### Change Browser
-
-In `BaseTest.cs`, modify the line:
-
+### Wait Times
+Explicit wait is set to 20 seconds in `BaseTest.cs`:
 ```csharp
-driver = WebDriverFactory.Create("chrome"); // Change to "firefox" if needed
+wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
 ```
 
-### Adjust Wait Times
+### Download Timeout
+File download timeout is 10 seconds by default in `FileUtil.WaitForFileToDownload()`.
 
-Modify the timeout in `BaseTest.cs`:
+## 🐛 Known Issues
 
-```csharp
-wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)); // Adjust as needed
-```
+- `GlobalSearchValidator.ValidateLinkTexts()` has inverted assertion logic (should be `Is.True`)
+- Some carousel transitions require hardcoded 2-second waits
 
-## 📝 Test Cases
+## 🤝 Contributing
 
-### Career Search Tests
-
-Validates that a user can search for job positions based on:
-- **Keyword**: Python, Java, C#
-- **Location**: All Locations
-- **Modality**: Remote
-
-**Test Cases:**
-```csharp
-[TestCase("Python")]
-[TestCase("Java")]
-[TestCase("C#")]
-```
-
-### Global Search Tests
-
-Validates that the global site search returns relevant results:
-
-**Test Cases:**
-```csharp
-[TestCase("BLOCKCHAIN")]
-[TestCase("Cloud")]
-[TestCase("Automation")]
-```
-
-## 🏃 Running Tests
-
-### From Visual Studio
-1. Open Test Explorer (View → Test Explorer)
-2. Click "Run All"
-
-### From Command Line
-
-```bash
-# Run all tests
-dotnet test
-
-# Run specific tests
-dotnet test --filter "FullyQualifiedName~CareerSearchTests"
-dotnet test --filter "FullyQualifiedName~GlobalSearchTests"
-
-# Run with verbose output
-dotnet test --logger "console;verbosity=detailed"
-```
-
-### Using NUnit Console
-
-```bash
-nunit3-console.exe YourProject.dll
-```
-
-## 🔍 Key Features
-
-### WebDriverFactory Pattern
-- Support for multiple browsers (Chrome, Firefox)
-- Centralized driver configuration
-- Automatic window maximization
-
-### Page Object Model (POM)
-- Separation of locators in dedicated classes
-- Reusable helper methods
-- Simplified maintenance
-
-### Explicit Waits
-- WebDriverWait with configurable timeout
-- ExpectedConditions for greater stability
-- Reduction of flaky tests
-
-### Inheritance and Reusability
-- BaseTest class with common Setup/TearDown
-- Specialized helpers per functionality
-- DRY (Don't Repeat Yourself) code
-
-## ⚠️ Known Issues
-
-### Assertion Logic Issue
-
-In `GlobalSearchTestHelper.cs`, the current validation checks that **NOT all** links contain the keyword:
-
-```csharp
-Assert.That(allContainKeyword, Is.False, // should be true?
-```
-
-**Recommended fix:** Change to `Is.True` to correctly validate that all results contain the searched keyword.
-
-## 🐛 Troubleshooting
-
-### WebDriver not found
-```bash
-# Reinstall the corresponding driver
-dotnet add package Selenium.WebDriver.ChromeDriver --version [latest]
-```
-
-### Elements not found
-- Verify that CSS/XPath selectors are correct
-- Increase the WebDriverWait timeout
-- Validate that the website structure hasn't changed
-
-### Intermittently failing tests
-- Increase explicit wait times
-- Check internet connection stability
-- Verify there are no popups or modals blocking elements
-
-## 📄 License
-
-This project is for educational and demonstration purposes.
-
-## 👥 Contributing
-
-Contributions are welcome. Please:
-1. Fork the project
+1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📧 Contact
+## 📄 License
 
-For questions or suggestions about this project, please open an issue in the repository.
+This project is licensed under the MIT License.
 
----
+## 🙏 Acknowledgments
 
-**Note**: This project is designed for testing and learning purposes. Make sure to comply with EPAM's website terms of use when running the tests.
+- EPAM Systems website for test scenarios
+- Selenium WebDriver community
+- NUnit testing framework
