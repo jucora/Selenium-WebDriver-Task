@@ -16,8 +16,8 @@ namespace SearchAutomation.Tests
             CareersPage careersPage = navbar.ClickCareersLink();
             careersPage
                 .EnterKeyword(keyword)
-                .SelectLocation()
-                .SelectRemoteOption();
+                .SelectRemoteOption()
+                .SelectLocation();
 
             JobListingsPage jobListingsPage = careersPage.ClickFindButton();
             jobListingsPage
