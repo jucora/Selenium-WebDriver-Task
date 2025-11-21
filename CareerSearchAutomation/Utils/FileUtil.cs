@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace SearchAutomation.Utils
+﻿namespace SearchAutomation.Utils
 {
     public static class FileUtil
     {
@@ -26,10 +24,10 @@ namespace SearchAutomation.Utils
                 if (exists)
                     return true;
 
-                Thread.Sleep(500); // revisa cada 0.5 segundos
+                Thread.Sleep(500); // checks every 0.5 seconds
             }
 
-            return false; // si nunca apareció
+            return false; // if it never appeared
         }
     }
 }

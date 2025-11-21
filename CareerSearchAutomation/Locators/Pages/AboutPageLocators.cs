@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace Carrier_Search_Automation.Locators
+namespace SearchAutomation.Locators.Pages
 {
     public static class AboutPageLocators
     {

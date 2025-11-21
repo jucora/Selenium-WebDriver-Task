@@ -13,10 +13,7 @@ namespace SearchAutomation.Tests
         [TestCase("C#")]
         public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
         {
-            IndexPage indexPage = new IndexPage(driver);
-            indexPage.AcceptCookies();
-
-            CareersPage careersPage = indexPage.ClickCareersLink();
+            CareersPage careersPage = navbar.ClickCareersLink();
             careersPage
                 .EnterKeyword(keyword)
                 .SelectLocation()

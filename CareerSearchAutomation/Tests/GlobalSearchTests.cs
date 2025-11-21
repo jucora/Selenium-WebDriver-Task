@@ -13,13 +13,11 @@ namespace SearchAutomation.Tests
         [TestCase("Automation")]
         public void ValidateUserCanSearchBasedOnCriteria(string keyword)
         {
-            IndexPage indexPage = new IndexPage(driver);
-            indexPage
-                .AcceptCookies()
+            navbar
                 .ClickMagnifierIcon()
                 .EnterSearchKeyword(keyword);
 
-            SearchPage searchPage = indexPage.ClickFindButton();
+            SearchPage searchPage = navbar.ClickFindButton();
             var searchResults = searchPage
                 .GetSearchResults(keyword);
 

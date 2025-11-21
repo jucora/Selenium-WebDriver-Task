@@ -1,15 +1,16 @@
-﻿using OpenQA.Selenium;
+﻿using CareerSearchAutomation.Core.Enums;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using SearchAutomation.Utils;
 
-namespace SearchAutomation.Drivers
+namespace SearchAutomation.Core
 {
     public static class WebDriverFactory
     {
-        public static IWebDriver Create(string browser = "firefox")
+        public static IWebDriver Create(BrowserType browser = BrowserType.Chrome)
         {
-            if (browser.ToLower() == "chrome")
+            if (browser == BrowserType.Chrome)
             {
                 var downloadDir = ProjectPaths.DownloadFolder;
                 Directory.CreateDirectory(downloadDir);
@@ -23,7 +24,7 @@ namespace SearchAutomation.Drivers
                 return new ChromeDriver(options);
             }
 
-            if (browser.ToLower() == "firefox")
+            if (browser == BrowserType.Firefox)
             {
                 var downloadDir = Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
@@ -36,6 +37,13 @@ namespace SearchAutomation.Drivers
                 profile.SetPreference("browser.download.folderList", 2);
                 profile.SetPreference("browser.download.dir", downloadDir);
                 profile.SetPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
+
+                // Anti-detection preferences
+                profile.SetPreference("dom.webdriver.enabled", false);
+                profile.SetPreference("useAutomationExtension", false);
+                profile.SetPreference("privacy.resistFingerprinting", false);
+                profile.SetPreference("general.platform.override", "Win32");
+                profile.SetPreference("general.buildID.override", "20100101");
 
                 var options = new FirefoxOptions
                 {

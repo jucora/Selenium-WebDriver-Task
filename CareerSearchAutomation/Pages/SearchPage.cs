@@ -1,5 +1,5 @@
-﻿using SearchAutomation.Locators;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using SearchAutomation.Locators.Pages;
 using SeleniumExtras.WaitHelpers;
 
 namespace SearchAutomation.Pages

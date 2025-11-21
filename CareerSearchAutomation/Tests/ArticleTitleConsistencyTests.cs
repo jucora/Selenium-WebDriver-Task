@@ -1,5 +1,4 @@
-﻿using Carrier_Search_Automation.Pages;
-using Carrier_Search_Automation.Validators;
+﻿using Carrier_Search_Automation.Validators;
 using NUnit.Framework;
 using SearchAutomation.Base;
 using SearchAutomation.Pages;
@@ -12,10 +11,7 @@ namespace SearchAutomation.Tests
         [Test]
         public void ArticleTitleMatchesCarouselTitle()
         {
-            IndexPage indexPage = new IndexPage(driver);
-            indexPage.AcceptCookies();
-
-            InsightsPage insightsPage = indexPage.ClickInsightsLink();
+            InsightsPage insightsPage = navbar.ClickInsightsLink();
             insightsPage.SwipeCarousel();
 
             var slideTitle = insightsPage.GetActiveSlideTitle();

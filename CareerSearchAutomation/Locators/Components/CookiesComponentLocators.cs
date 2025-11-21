@@ -1,8 +1,8 @@
 ﻿using OpenQA.Selenium;
 
-namespace Carrier_Search_Automation.Locators
+namespace SearchAutomation.Locators.Components
 {
-    public static class Cookies
+    public static class CookiesComponentLocators
     {
         public static readonly By AcceptCookiesButton = 
             By.CssSelector("button[id=onetrust-accept-btn-handler]");

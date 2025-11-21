@@ -1,8 +1,7 @@
-﻿using Carrier_Search_Automation.Locators;
-using OpenQA.Selenium;
-using SearchAutomation.Pages;
+﻿using OpenQA.Selenium;
+using SearchAutomation.Locators.Pages;
 
-namespace Carrier_Search_Automation.Pages
+namespace SearchAutomation.Pages
 {
     public class AboutPage : BasePage
     {
