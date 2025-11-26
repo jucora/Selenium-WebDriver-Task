@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Carrier_Search_Automation.Validators
+namespace SearchAutomation.Validators
 {
     public static class InsightsValidator
     {

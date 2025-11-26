@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SearchAutomation.Base;
 using SeleniumExtras.WaitHelpers;
 
 namespace SearchAutomation.Core

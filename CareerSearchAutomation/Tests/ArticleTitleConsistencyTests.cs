@@ -1,7 +1,6 @@
-﻿using Carrier_Search_Automation.Validators;
-using NUnit.Framework;
-using SearchAutomation.Base;
+﻿using NUnit.Framework;
 using SearchAutomation.Pages;
+using SearchAutomation.Validators;
 
 namespace SearchAutomation.Tests
 {
@@ -11,6 +10,7 @@ namespace SearchAutomation.Tests
         [Test]
         public void ArticleTitleMatchesCarouselTitle()
         {
+            Log.Info("Hello World of Logging :) ...");
             InsightsPage insightsPage = navbar.ClickInsightsLink();
             insightsPage.SwipeCarousel();
 

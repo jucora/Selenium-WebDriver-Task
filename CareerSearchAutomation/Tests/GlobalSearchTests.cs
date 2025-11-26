@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SearchAutomation.Base;
 using SearchAutomation.Pages;
 using SearchAutomation.Validators;
 

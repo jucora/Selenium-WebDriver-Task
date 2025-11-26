@@ -11,7 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Log.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Log.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Framework de pruebas -->
+    <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="NUnit" Version="4.4.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />

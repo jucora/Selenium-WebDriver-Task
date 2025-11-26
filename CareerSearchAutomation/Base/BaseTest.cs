@@ -1,38 +1,50 @@
 ﻿using CareerSearchAutomation.Core.Enums;
+using log4net;
+using log4net.Config;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SearchAutomation.Components;
 using SearchAutomation.Core;
 
-namespace SearchAutomation.Base
+[TestFixture]
+public abstract class BaseTest
 {
-    public abstract class BaseTest
+    protected IWebDriver driver = null!;
+    protected WebDriverWait wait = null!;
+    protected NavbarComponent navbar = null!;
+    protected CookiesComponent cookies = null!;
+    
+    protected ILog Log
     {
-        protected IWebDriver driver = null!;
-        protected WebDriverWait wait = null!;
-        protected NavbarComponent navbar = null!;
-        protected CookiesComponent cookies = null!;
+        get { return LogManager.GetLogger(this.GetType()); }
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            driver = WebDriverFactory.Create(BrowserType.Chrome); // Change to firefox if needed
-            driver.Manage().Window.Maximize();
+    [OneTimeSetUp]
+    public void BeforeAllTests()
+    {
+        XmlConfigurator.Configure(new FileInfo("Log.config"));
+    }
 
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)); // Explicit wait of 20 seconds
+    [SetUp]
+    public void Setup()
+    {
+        driver = WebDriverFactory.Create(BrowserType.Chrome); // Change to firefox if needed
+        driver.Manage().Window.Maximize();
 
-            navbar = new NavbarComponent(driver);
-            cookies = new CookiesComponent(driver);
+        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)); // Explicit wait of 20 seconds
 
-            driver.Navigate().GoToUrl("https://www.epam.com/");
-            cookies.AcceptCookiesIfPresent();
-        }
+        navbar = new NavbarComponent(driver);
+        cookies = new CookiesComponent(driver);
 
-        [TearDown]
-        public void Teardown()
-        {
-            driver.Quit();
-        }
+        driver.Navigate().GoToUrl("https://www.epam.com/");
+        cookies.AcceptCookiesIfPresent();
+    }
+
+    [TearDown]
+    public void Teardown()
+    {
+        driver.Quit();
     }
 }
+

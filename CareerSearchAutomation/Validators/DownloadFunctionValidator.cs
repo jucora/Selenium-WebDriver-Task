@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using SearchAutomation.Utils;
 
-namespace Carrier_Search_Automation.Validators
+namespace SearchAutomation.Validators
 {
     public static class DownloadFunctionValidator
     {

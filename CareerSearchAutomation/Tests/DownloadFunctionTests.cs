@@ -1,6 +1,5 @@
-﻿using Carrier_Search_Automation.Validators;
+﻿using SearchAutomation.Validators;
 using NUnit.Framework;
-using SearchAutomation.Base;
 using SearchAutomation.Pages;
 
 namespace SearchAutomation.Tests
