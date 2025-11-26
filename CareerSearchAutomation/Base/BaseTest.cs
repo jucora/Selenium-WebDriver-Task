@@ -2,10 +2,12 @@
 using log4net;
 using log4net.Config;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SearchAutomation.Components;
 using SearchAutomation.Core;
+using SearchAutomation.Utils;
 
 [TestFixture]
 public abstract class BaseTest
@@ -15,11 +17,6 @@ public abstract class BaseTest
     protected NavbarComponent navbar = null!;
     protected CookiesComponent cookies = null!;
     
-    protected ILog Log
-    {
-        get { return LogManager.GetLogger(this.GetType()); }
-    }
-
     [OneTimeSetUp]
     public void BeforeAllTests()
     {
@@ -44,6 +41,10 @@ public abstract class BaseTest
     [TearDown]
     public void Teardown()
     {
+        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+        {
+            ScreenshotMaker.TakeBrowserScreenshot(driver);
+        }
         driver.Quit();
     }
 }

@@ -10,7 +10,6 @@ namespace SearchAutomation.Tests
         [Test]
         public void ArticleTitleMatchesCarouselTitle()
         {
-            Log.Info("Hello World of Logging :) ...");
             InsightsPage insightsPage = navbar.ClickInsightsLink();
             insightsPage.SwipeCarousel();
 
