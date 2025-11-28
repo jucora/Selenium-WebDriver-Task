@@ -1,0 +1,31 @@
+﻿using NUnit.Framework;
+using TestAutomationFramework.Business.Pages;
+using TestAutomationFramework.Tests;
+
+namespace SearchAutomation.Tests
+{
+    [TestFixture]
+    public class CareerSearchTests : BaseTest
+    {
+        [TestCase("Python")]
+        [TestCase("Java")]
+        [TestCase("C#")]
+        public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
+        {
+            CareersPage careersPage = navbar.ClickCareersLink();
+            careersPage
+                .EnterKeyword(keyword)
+                .SelectRemoteOption()
+                .SelectLocation();
+
+            JobListingsPage jobListingsPage = careersPage.ClickFindButton();
+            jobListingsPage
+                .SelectViewAndApplyFromLastResult();
+
+            //CareerSearchValidator.ValidateKeywordIsPresent(keyword, driver.PageSource);
+            bool containsKeyword = Driver.PageSource.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+            Assert.That(containsKeyword,
+                $"Expected to find '{keyword}' in the job description, but it was not found.");
+        }
+    }
+}
