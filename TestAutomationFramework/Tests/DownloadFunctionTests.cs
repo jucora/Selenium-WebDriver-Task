@@ -14,9 +14,9 @@ namespace SearchAutomation.Tests
             AboutPage aboutPage = navbar.ClickAboutLink();
             aboutPage.ClickDownloadButton();
 
-            //DownloadFunctionValidator.ValidateFileDownloaded();
+            FileUtil fileUtil = new FileUtil(Logger);
             Assert.That(
-                FileUtil.WaitForFileToDownload("EPAM_Corporate_Overview_Sept_25.pdf"), Is.True,
+                fileUtil.WaitForFileToDownload("EPAM_Corporate_Overview_Sept_25.pdf"), Is.True,
                 "The file EPAM_Systems_Company_Overview.pdf was NOT downloaded");
         }
     }

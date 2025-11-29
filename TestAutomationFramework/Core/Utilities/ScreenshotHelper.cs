@@ -1,47 +1,45 @@
-﻿// TestAutomationFramework.Core/Utilities/ScreenshotHelper.cs
-
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using TestAutomationFramework.Core.Configuration;
 using TestAutomationFramework.Core.Logging;
 
 namespace TestAutomationFramework.Core.Utilities
 {
     /// <summary>
-    /// Clase helper para capturar screenshots cuando los tests fallan
-    /// SOLID - Single Responsibility: Solo maneja capturas de pantalla
+    /// Helper class for capturing screenshots when tests fail
+    /// SOLID - Single Responsibility: Only handles screenshot capturing
     /// </summary>
     public class ScreenshotHelper
     {
-        private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private readonly ILogger logger;
+        private readonly IConfiguration configuration;
 
         public ScreenshotHelper(ILogger logger, IConfiguration configuration)
         {
-            _logger = logger;
-            _configuration = configuration;
+            this.logger = logger;
+            this.configuration = configuration;
         }
 
         /// <summary>
-        /// Captura un screenshot con fecha y hora en el nombre
-        /// Formato: TestName_yyyy-MM-dd_HH-mm-ss.png
+        /// Captures a screenshot with the date and time in the filename
+        /// Format: TestName_yyyy-MM-dd_HH-mm-ss.png
         /// </summary>
-        /// <param name="driver">Instancia de WebDriver</param>
-        /// <param name="testName">Nombre del test que falló</param>
-        /// <returns>Ruta completa del archivo guardado</returns>
-        public string TakeScreenshot(IWebDriver driver, string testName)
+        /// <param name="driver">WebDriver instance</param>
+        /// <param name="testName">Name of the test that failed</param>
+        /// <returns>Full path of the saved file</returns>
+        public string? TakeScreenshot(IWebDriver driver, string testName)
         {
             try
             {
-                _logger.Info($"Capturando screenshot para test: {testName}");
+                logger.Info($"Capturing screenshot for test: {testName}");
 
-                // Obtiene la ruta base desde configuración
-                var screenshotPath = _configuration.GetScreenshotPath();
+                // Gets the base path from configuration
+                var screenshotPath = configuration.GetScreenshotPath();
 
-                // Crea el directorio si no existe
+                // Creates the directory if it does not exist
                 if (!Directory.Exists(screenshotPath))
                 {
                     Directory.CreateDirectory(screenshotPath);
-                    _logger.Debug($"Directorio de screenshots creado: {screenshotPath}");
+                    logger.Debug($"Screenshot directory created: {screenshotPath}");
                 }
 
                 // Genera nombre de archivo con timestamp
@@ -53,22 +51,23 @@ namespace TestAutomationFramework.Core.Utilities
                 var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
                 screenshot.SaveAsFile(fullPath);
 
-                _logger.Info($"Screenshot guardado en: {fullPath}");
+                logger.Info($"Screenshot saved at: {fullPath}");
+
                 return fullPath;
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al capturar screenshot para {testName}", ex);
+                logger.Error($"Error capturing screenshot for {testName}", ex);
                 return null;
             }
         }
 
         /// <summary>
-        /// Captura screenshot con mensaje personalizado
+        /// Captures a screenshot with a custom message
         /// </summary>
         public string TakeScreenshot(IWebDriver driver, string testName, string reason)
         {
-            _logger.Info($"Capturando screenshot - Razón: {reason}");
+            logger.Info($"Capturing screenshot - Reason: {reason}");
             return TakeScreenshot(driver, testName);
         }
     }

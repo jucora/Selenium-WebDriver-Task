@@ -1,8 +1,5 @@
-﻿// TestAutomationFramework.Core/Utilities/WaitHelper.cs
-
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System;
 using TestAutomationFramework.Core.Configuration;
 using TestAutomationFramework.Core.Logging;
 
@@ -14,19 +11,17 @@ namespace TestAutomationFramework.Core.Utilities
     /// </summary>
     public class WaitHelper
     {
-        private readonly IWebDriver _driver;
-        private readonly WebDriverWait _wait;
-        private readonly ILogger _logger;
+        private readonly WebDriverWait wait;
+        private readonly ILogger logger;
 
         public WaitHelper(IWebDriver driver, ILogger logger, IConfiguration configuration)
         {
-            _driver = driver;
-            _logger = logger;
+            this.logger = logger;
 
             var timeout = configuration.GetExplicitWait();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeout));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
 
-            _logger.Debug($"WaitHelper inicializado con timeout de {timeout}s");
+            logger.Debug($"WaitHelper inicializado con timeout de {timeout}s");
         }
 
         /// <summary>
@@ -34,16 +29,16 @@ namespace TestAutomationFramework.Core.Utilities
         /// </summary>
         public IWebElement WaitForElementVisible(By locator)
         {
-            _logger.Debug($"Esperando a que el elemento sea visible: {locator}");
+            logger.Debug($"Esperando a que el elemento sea visible: {locator}");
             try
             {
-                var element = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
-                _logger.Debug("Elemento visible encontrado");
+                var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
+                logger.Debug("Elemento visible encontrado");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                _logger.Error($"Timeout esperando elemento visible: {locator}", ex);
+                logger.Error($"Timeout esperando elemento visible: {locator}", ex);
                 throw;
             }
         }
@@ -53,16 +48,16 @@ namespace TestAutomationFramework.Core.Utilities
         /// </summary>
         public IWebElement WaitForElementClickable(By locator)
         {
-            _logger.Debug($"Esperando a que el elemento sea clickeable: {locator}");
+            logger.Debug($"Esperando a que el elemento sea clickeable: {locator}");
             try
             {
-                var element = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
-                _logger.Debug("Elemento clickeable encontrado");
+                var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+                logger.Debug("Elemento clickeable encontrado");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                _logger.Error($"Timeout esperando elemento clickeable: {locator}", ex);
+                logger.Error($"Timeout esperando elemento clickeable: {locator}", ex);
                 throw;
             }
         }
@@ -72,16 +67,16 @@ namespace TestAutomationFramework.Core.Utilities
         /// </summary>
         public IWebElement WaitForElementExists(By locator)
         {
-            _logger.Debug($"Esperando a que el elemento exista: {locator}");
+            logger.Debug($"Esperando a que el elemento exista: {locator}");
             try
             {
-                var element = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(locator));
-                _logger.Debug("Elemento encontrado en DOM");
+                var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(locator));
+                logger.Debug("Elemento encontrado en DOM");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                _logger.Error($"Timeout esperando elemento en DOM: {locator}", ex);
+                logger.Error($"Timeout esperando elemento en DOM: {locator}", ex);
                 throw;
             }
         }
@@ -91,14 +86,14 @@ namespace TestAutomationFramework.Core.Utilities
         /// </summary>
         public T WaitForCondition<T>(Func<IWebDriver, T> condition)
         {
-            _logger.Debug("Esperando condición personalizada");
+            logger.Debug("Esperando condición personalizada");
             try
             {
-                return _wait.Until(condition);
+                return wait.Until(condition);
             }
             catch (WebDriverTimeoutException ex)
             {
-                _logger.Error("Timeout esperando condición personalizada", ex);
+                logger.Error("Timeout esperando condición personalizada", ex);
                 throw;
             }
         }

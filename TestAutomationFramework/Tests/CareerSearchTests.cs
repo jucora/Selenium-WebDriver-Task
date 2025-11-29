@@ -22,7 +22,6 @@ namespace SearchAutomation.Tests
             jobListingsPage
                 .SelectViewAndApplyFromLastResult();
 
-            //CareerSearchValidator.ValidateKeywordIsPresent(keyword, driver.PageSource);
             bool containsKeyword = Driver.PageSource.Contains(keyword, StringComparison.OrdinalIgnoreCase);
             Assert.That(containsKeyword,
                 $"Expected to find '{keyword}' in the job description, but it was not found.");

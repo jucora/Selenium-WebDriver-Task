@@ -17,7 +17,6 @@ namespace SearchAutomation.Tests
             insightsPage.ClickReadMoreLink();
             var articleTitle = insightsPage.GetArticleTitle();
 
-            //InsightsValidator.ValidateArticleNameConsistency(slideTitle, articleTitle);
             Assert.That(slideTitle.Equals(
                 articleTitle), Is.True,
                 $"The slide title: {slideTitle} does not match with the article title: {articleTitle}");

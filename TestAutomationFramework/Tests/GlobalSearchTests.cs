@@ -20,7 +20,6 @@ namespace SearchAutomation.Tests
             var searchResults = searchPage
                 .GetSearchResults(keyword);
 
-            //GlobalSearchValidator.ValidateLinkTexts(searchResults, keyword);
             bool allContainKeyword = searchResults.All(text =>
                 text.Contains(keyword, StringComparison.OrdinalIgnoreCase)
             );

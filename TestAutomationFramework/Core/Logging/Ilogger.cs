@@ -1,10 +1,8 @@
-﻿// TestAutomationFramework.Core/Logging/ILogger.cs
-
-namespace TestAutomationFramework.Core.Logging
+﻿namespace TestAutomationFramework.Core.Logging
 {
     /// <summary>
-    /// Interfaz para el sistema de logging
-    /// Permite cambiar la implementación sin afectar el resto del código (SOLID - Dependency Inversion)
+    /// Interface for the logging system
+    /// Allows changing the implementation without affecting the rest of the code (SOLID - Dependency Inversion)
     /// </summary>
     public interface ILogger
     {

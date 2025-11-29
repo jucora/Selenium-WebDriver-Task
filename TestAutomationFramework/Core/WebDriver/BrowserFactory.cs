@@ -1,11 +1,10 @@
-﻿// TestAutomationFramework.Core/WebDriver/BrowserFactory.cs
-
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using TestAutomationFramework.Core.Enums;
 using TestAutomationFramework.Core.Logging;
+using TestAutomationFramework.Core.Utilities;
 
 namespace TestAutomationFramework.Core.WebDriver
 {
@@ -16,14 +15,14 @@ namespace TestAutomationFramework.Core.WebDriver
     /// </summary>
     public class BrowserFactory : IBrowserFactory
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         /// <summary>
         /// Constructor con inyección de dependencias del logger
         /// </summary>
         public BrowserFactory(ILogger logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace TestAutomationFramework.Core.WebDriver
         /// <returns>Instancia configurada de IWebDriver</returns>
         public IWebDriver CreateDriver(BrowserType browserType)
         {
-            _logger.Info($"Creando instancia de WebDriver para navegador: {browserType}");
+            logger.Info($"Creando instancia de WebDriver para navegador: {browserType}");
 
             IWebDriver driver;
 
@@ -55,12 +54,12 @@ namespace TestAutomationFramework.Core.WebDriver
                     break;
 
                 default:
-                    _logger.Warn($"Tipo de navegador no reconocido: {browserType}. Usando Chrome por defecto.");
+                    logger.Warn($"Tipo de navegador no reconocido: {browserType}. Usando Chrome por defecto.");
                     driver = CreateChromeDriver();
                     break;
             }
 
-            _logger.Info($"WebDriver creado exitosamente para {browserType}");
+            logger.Info($"WebDriver creado exitosamente para {browserType}");
             return driver;
         }
 
@@ -77,10 +76,17 @@ namespace TestAutomationFramework.Core.WebDriver
             options.AddArgument("--disable-notifications");
             options.AddArgument("--disable-popup-blocking");
 
+            // Configuración para descargas automáticas sin prompt
+            var downloadDir = DownloadsPath.DownloadFolder;
+            options.AddUserProfilePreference("download.default_directory", downloadDir);
+            options.AddUserProfilePreference("download.prompt_for_download", false);
+            options.AddUserProfilePreference("download.directory_upgrade", true);
+            options.AddUserProfilePreference("safebrowsing.enabled", true);
+
             // Para ejecución en servidores sin interfaz gráfica (CI/CD)
             // options.AddArgument("--headless");
 
-            _logger.Debug("Configurando ChromeOptions con argumentos estándar");
+            logger.Debug("Configurando ChromeOptions con argumentos estándar");
 
             return new ChromeDriver(options);
         }
@@ -96,7 +102,20 @@ namespace TestAutomationFramework.Core.WebDriver
             options.AddArgument("--width=1920");
             options.AddArgument("--height=1080");
 
-            _logger.Debug("Configurando FirefoxOptions con argumentos estándar");
+            // Configuración para descargas automáticas sin prompt
+            var downloadDir = DownloadsPath.DownloadFolder;
+            options.SetPreference("browser.download.folderList", 2);
+            options.SetPreference("browser.download.dir", downloadDir);
+            options.SetPreference("browser.download.useDownloadDir", true);
+
+            // Evitar popup de "guardar como"
+            options.SetPreference("browser.helperApps.neverAsk.saveToDisk",
+                "application/pdf,application/octet-stream,application/vnd.ms-excel,application/zip");
+
+            // Desactivar visor interno de PDF para que los descargue
+            options.SetPreference("pdfjs.disabled", true);
+
+            logger.Debug("Configurando FirefoxOptions con argumentos estándar");
 
             return new FirefoxDriver(options);
         }
@@ -112,7 +131,7 @@ namespace TestAutomationFramework.Core.WebDriver
             options.AddArgument("--start-maximized");
             options.AddArgument("--disable-notifications");
 
-            _logger.Debug("Configurando EdgeOptions con argumentos estándar");
+            logger.Debug("Configurando EdgeOptions con argumentos estándar");
 
             return new EdgeDriver(options);
         }

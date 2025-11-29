@@ -1,9 +1,7 @@
-﻿// TestAutomationFramework.Core/Enums/EnvironmentType.cs
-
-namespace TestAutomationFramework.Core.Enums
+﻿namespace TestAutomationFramework.Core.Enums
 {
     /// <summary>
-    /// Enumera los ambientes donde se pueden ejecutar las pruebas
+    /// Enumerates the environments where the tests can be executed
     /// </summary>
     public enum EnvironmentType
     {

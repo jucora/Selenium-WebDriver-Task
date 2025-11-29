@@ -1,7 +1,4 @@
-﻿
-// TestAutomationFramework.Core/WebDriver/IBrowserFactory.cs
-
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using TestAutomationFramework.Core.Enums;
 
 namespace TestAutomationFramework.Core.WebDriver

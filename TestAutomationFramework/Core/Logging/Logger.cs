@@ -1,76 +1,74 @@
-﻿// TestAutomationFramework.Core/Logging/Logger.cs
-
-using NLog;
+﻿using NLog;
 
 namespace TestAutomationFramework.Core.Logging
 {
     /// <summary>
-    /// Implementación del logger usando NLog
-    /// Soporta logging a consola y archivo simultáneamente
+    /// Logger implementation using NLog
+    /// Supports logging to console and file simultaneously
     /// </summary>
     public class Logger : ILogger
     {
-        private readonly NLog.Logger _logger;
+        private readonly NLog.Logger logger;
 
         /// <summary>
-        /// Constructor que inicializa el logger de NLog
+        /// Constructor that initializes the NLog logger
         /// </summary>
         public Logger()
         {
-            _logger = LogManager.GetCurrentClassLogger();
+            this.logger = LogManager.GetCurrentClassLogger();
         }
 
         /// <summary>
-        /// Constructor que permite especificar el nombre del logger
-        /// Útil para identificar de qué clase proviene el log
+        /// Constructor that allows specifying the logger name
+        /// Useful for identifying which class the log originates from
         /// </summary>
         public Logger(string loggerName)
         {
-            _logger = LogManager.GetLogger(loggerName);
+            logger = LogManager.GetLogger(loggerName);
         }
 
         /// <summary>
-        /// Registra mensaje informativo
-        /// Usado para flujo normal de la aplicación
+        /// Logs an informational message
+        /// Used for the normal application flow
         /// </summary>
         public void Info(string message)
         {
-            _logger.Info(message);
+            logger.Info(message);
         }
 
         /// <summary>
-        /// Registra mensaje de debug
-        /// Usado para información detallada durante desarrollo
+        /// Logs a debug message
+        /// Used for detailed information during development
         /// </summary>
         public void Debug(string message)
         {
-            _logger.Debug(message);
+            logger.Debug(message);
         }
 
         /// <summary>
-        /// Registra advertencia
-        /// Usado para situaciones que no son errores pero requieren atención
+        /// Logs a warning
+        /// Used for situations that are not errors but require attention
         /// </summary>
         public void Warn(string message)
         {
-            _logger.Warn(message);
+            logger.Warn(message);
         }
 
         /// <summary>
-        /// Registra error sin excepción
+        /// Logs an error without an exception
         /// </summary>
         public void Error(string message)
         {
-            _logger.Error(message);
+            logger.Error(message);
         }
 
         /// <summary>
-        /// Registra error con excepción completa
-        /// Incluye stack trace para debugging
+        /// Logs an error with the full exception
+        /// Includes stack trace for debugging
         /// </summary>
         public void Error(string message, Exception exception)
         {
-            _logger.Error(exception, message);
+            logger.Error(exception, message);
         }
     }
 }

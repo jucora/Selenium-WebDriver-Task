@@ -1,6 +1,4 @@
-﻿// TestAutomationFramework.Tests/BaseTest.cs
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using TestAutomationFramework.Core.Configuration;
 using TestAutomationFramework.Core.Logging;
@@ -79,9 +77,8 @@ namespace TestAutomationFramework.Tests
                 AdditionalSetup();
 
                 navbar = new NavbarComponent(Driver, Logger);
-                cookies = new CookiesComponent(Driver, Logger);
 
-                //Driver.Navigate().GoToUrl("https://www.epam.com/");
+                cookies = new CookiesComponent(Driver, Logger);
                 cookies.AcceptCookiesIfPresent();
             }
             catch (Exception ex)

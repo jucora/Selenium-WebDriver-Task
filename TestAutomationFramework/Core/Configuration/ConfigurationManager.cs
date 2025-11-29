@@ -1,67 +1,65 @@
-﻿// TestAutomationFramework.Core/Configuration/ConfigurationManager.cs
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace TestAutomationFramework.Core.Configuration
 {
     /// <summary>
-    /// Clase Singleton que maneja la configuración del framework
-    /// Lee configuración desde appsettings.json
-    /// PATRÓN SINGLETON: Solo existe una instancia en toda la aplicación
+    /// Singleton class that handles the framework configuration
+    /// Reads configuration from appsettings.json
+    /// SINGLETON PATTERN: Only one instance exists throughout the entire application
     /// </summary>
     public sealed class ConfigurationManager : IConfiguration
     {
-        // Variable estática que contiene la única instancia (Singleton)
-        private static ConfigurationManager _instance;
+        // Static variable that holds the single instance (Singleton)
+        private static ConfigurationManager? instance;
 
-        // Lock object para thread-safety en ambientes multi-hilo
-        private static readonly object _lock = new object();
+        // Lock object for thread-safety in multithreaded environments
+        private static readonly object lockObject = new object();
 
-        // IConfiguration de Microsoft para leer archivos JSON
-        private readonly IConfigurationRoot _configuration;
+        // Microsoft IConfiguration used to read JSON files
+        private readonly IConfigurationRoot configuration;
 
         /// <summary>
-        /// Constructor privado para evitar instanciación externa (parte del patrón Singleton)
+        /// Private constructor to prevent external instantiation (part of the Singleton pattern)
         /// </summary>
         private ConfigurationManager()
         {
-            // Construye la configuración leyendo los archivos JSON
+            // Builds the configuration by reading the JSON files
             var builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory + "Tests/Configuration") // NO Directory.GetCurrentDirectory()
+                .SetBasePath(AppContext.BaseDirectory + "Tests/Configuration")
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{GetEnvironmentVariable()}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables(); // Permite override con variables de ambiente
+                .AddEnvironmentVariables(); // Allows overrides using environment variables
 
-            _configuration = builder.Build();
+            configuration = builder.Build();
         }
 
         /// <summary>
-        /// Propiedad que proporciona acceso a la única instancia (Singleton)
-        /// Thread-safe usando double-check locking
+        /// Property that provides access to the single instance (Singleton)
+        /// Thread-safe using double-check locking
         /// </summary>
         public static ConfigurationManager Instance
         {
             get
             {
-                // Primer check sin lock para performance
-                if (_instance == null)
+                // First check without lock for performance
+                if (instance == null)
                 {
-                    // Lock para evitar que múltiples threads creen instancias
-                    lock (_lock)
+                    // Lock to prevent multiple threads from creating instances
+                    lock (lockObject)
                     {
-                        // Segundo check dentro del lock
-                        if (_instance == null)
+                        // Second check inside the lock
+                        if (instance == null)
                         {
-                            _instance = new ConfigurationManager();
+                            instance = new ConfigurationManager();
                         }
                     }
                 }
-                return _instance;
+                return instance;
             }
         }
 
         /// <summary>
-        /// Obtiene la variable de ambiente del sistema operativo
+        /// Gets the environment variable from the operating system or defaults to "Production"
         /// </summary>
         private static string GetEnvironmentVariable()
         {
@@ -69,60 +67,60 @@ namespace TestAutomationFramework.Core.Configuration
         }
 
         /// <summary>
-        /// Obtiene el tipo de navegador configurado
+        /// Gets the configured browser type
         /// </summary>
         public string GetBrowser()
         {
-            return _configuration["Browser"] ?? "Chrome";
+            return configuration["Browser"] ?? "Chrome";
         }
 
         /// <summary>
-        /// Obtiene el ambiente configurado (Development, Staging, Production)
+        /// Gets the configured environment (Development, Staging, Production)
         /// </summary>
         public string GetEnvironment()
         {
-            return _configuration["Environment"] ?? "Development";
+            return configuration["Environment"] ?? "Development";
         }
 
         /// <summary>
-        /// Obtiene la URL base del ambiente configurado
+        /// Gets the base URL of the configured environment
         /// </summary>
         public string GetBaseUrl()
         {
             var environment = GetEnvironment();
-            return _configuration[$"Environments:{environment}:BaseUrl"];
+            return configuration[$"Environments:{environment}:BaseUrl"] ?? string.Empty;
         }
 
         /// <summary>
-        /// Obtiene el tiempo de espera implícita en segundos
+        /// Gets the implicit wait time in seconds
         /// </summary>
         public int GetImplicitWait()
         {
-            return int.Parse(_configuration["Timeouts:ImplicitWait"] ?? "10");
+            return int.Parse(configuration["Timeouts:ImplicitWait"] ?? "10");
         }
 
         /// <summary>
-        /// Obtiene el tiempo de espera explícita en segundos
+        /// Gets the explicit wait time in seconds
         /// </summary>
         public int GetExplicitWait()
         {
-            return int.Parse(_configuration["Timeouts:ExplicitWait"] ?? "30");
+            return int.Parse(configuration["Timeouts:ExplicitWait"] ?? "30");
         }
 
         /// <summary>
-        /// Obtiene el nivel mínimo de logging configurado
+        /// Gets the configured minimum logging level
         /// </summary>
         public string GetLogLevel()
         {
-            return _configuration["Logging:MinLevel"] ?? "Info";
+            return configuration["Logging:MinLevel"] ?? "Info";
         }
 
         /// <summary>
-        /// Obtiene la ruta donde se guardarán los screenshots
+        /// Gets the path where screenshots will be saved
         /// </summary>
         public string GetScreenshotPath()
         {
-            return _configuration["ScreenshotPath"] ?? "Screenshots";
+            return configuration["ScreenshotPath"] ?? "Screenshots";
         }
     }
 }

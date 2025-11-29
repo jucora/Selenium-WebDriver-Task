@@ -1,6 +1,4 @@
-﻿// TestAutomationFramework.Core/WebDriver/DriverManager.cs
-
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using TestAutomationFramework.Core.Configuration;
 using TestAutomationFramework.Core.Enums;
 using TestAutomationFramework.Core.Logging;
@@ -17,14 +15,14 @@ namespace TestAutomationFramework.Core.WebDriver
         // ThreadLocal permite que cada hilo tenga su propia instancia del driver
         // Esto es crucial para ejecutar tests en paralelo
         [ThreadStatic]
-        private static DriverManager _instance;
+        private static DriverManager instance;
 
-        private static readonly object _lock = new object();
+        private static readonly object lockObject = new object();
 
-        private IWebDriver _driver;
-        private readonly IBrowserFactory _browserFactory;
-        private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private IWebDriver driver;
+        private readonly IBrowserFactory browserFactory;
+        private readonly ILogger logger;
+        private readonly IConfiguration configuration;
 
         /// <summary>
         /// Constructor privado (Singleton Pattern)
@@ -32,11 +30,11 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         private DriverManager()
         {
-            _logger = new Logger(nameof(DriverManager));
-            _configuration = ConfigurationManager.Instance;
-            _browserFactory = new BrowserFactory(_logger);
+            logger = new Logger(nameof(DriverManager));
+            configuration = ConfigurationManager.Instance;
+            browserFactory = new BrowserFactory(logger);
 
-            _logger.Info("DriverManager inicializado");
+            logger.Info("DriverManager inicializado");
         }
 
         /// <summary>
@@ -48,17 +46,17 @@ namespace TestAutomationFramework.Core.WebDriver
             get
             {
                 // ThreadStatic hace que cada thread tenga su propia instancia
-                if (_instance == null)
+                if (instance == null)
                 {
-                    lock (_lock)
+                    lock (lockObject)
                     {
-                        if (_instance == null)
+                        if (instance == null)
                         {
-                            _instance = new DriverManager();
+                            instance = new DriverManager();
                         }
                     }
                 }
-                return _instance;
+                return instance;
             }
         }
 
@@ -70,13 +68,13 @@ namespace TestAutomationFramework.Core.WebDriver
         {
             get
             {
-                if (_driver == null)
+                if (driver == null)
                 {
                     var errorMsg = "WebDriver no ha sido inicializado. Llama a InitializeDriver() primero.";
-                    _logger.Error(errorMsg);
+                    logger.Error(errorMsg);
                     throw new InvalidOperationException(errorMsg);
                 }
-                return _driver;
+                return driver;
             }
         }
 
@@ -86,37 +84,37 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         public void InitializeDriver()
         {
-            if (_driver != null)
+            if (driver != null)
             {
-                _logger.Warn("WebDriver ya estaba inicializado. Cerrando instancia anterior.");
+                logger.Warn("WebDriver ya estaba inicializado. Cerrando instancia anterior.");
                 QuitDriver();
             }
 
             try
             {
                 // Obtiene el tipo de navegador desde la configuración
-                var browserString = _configuration.GetBrowser();
-                _logger.Info($"Inicializando WebDriver para navegador: {browserString}");
+                var browserString = configuration.GetBrowser();
+                logger.Info($"Inicializando WebDriver para navegador: {browserString}");
 
                 // Convierte el string a enum
                 if (!Enum.TryParse<BrowserType>(browserString, true, out var browserType))
                 {
-                    _logger.Warn($"Tipo de navegador '{browserString}' no válido. Usando Chrome por defecto.");
+                    logger.Warn($"Tipo de navegador '{browserString}' no válido. Usando Chrome por defecto.");
                     browserType = BrowserType.Chrome;
                 }
 
                 // Usa el Factory para crear el driver
-                _driver = _browserFactory.CreateDriver(browserType);
+                driver = browserFactory.CreateDriver(browserType);
 
                 // Configura timeouts desde la configuración
-                var implicitWait = _configuration.GetImplicitWait();
-                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(implicitWait);
+                var implicitWait = configuration.GetImplicitWait();
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(implicitWait);
 
-                _logger.Info($"WebDriver inicializado correctamente con timeout implícito de {implicitWait}s");
+                logger.Info($"WebDriver inicializado correctamente con timeout implícito de {implicitWait}s");
             }
             catch (Exception ex)
             {
-                _logger.Error("Error al inicializar WebDriver", ex);
+                logger.Error("Error al inicializar WebDriver", ex);
                 throw;
             }
         }
@@ -126,12 +124,12 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         public void NavigateToBaseUrl()
         {
-            var baseUrl = _configuration.GetBaseUrl();
-            _logger.Info($"Navegando a URL base: {baseUrl}");
+            var baseUrl = configuration.GetBaseUrl();
+            logger.Info($"Navegando a URL base: {baseUrl}");
 
             Driver.Navigate().GoToUrl(baseUrl);
 
-            _logger.Info("Navegación completada exitosamente");
+            logger.Info("Navegación completada exitosamente");
         }
 
         /// <summary>
@@ -139,7 +137,7 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         public void NavigateToUrl(string url)
         {
-            _logger.Info($"Navegando a URL: {url}");
+            logger.Info($"Navegando a URL: {url}");
             Driver.Navigate().GoToUrl(url);
         }
 
@@ -149,19 +147,19 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         public void QuitDriver()
         {
-            if (_driver != null)
+            if (driver != null)
             {
                 try
                 {
-                    _logger.Info("Cerrando WebDriver...");
-                    _driver.Quit();
-                    _driver.Dispose();
-                    _driver = null;
-                    _logger.Info("WebDriver cerrado correctamente");
+                    logger.Info("Cerrando WebDriver...");
+                    driver.Quit();
+                    driver.Dispose();
+                    driver = null;
+                    logger.Info("WebDriver cerrado correctamente");
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("Error al cerrar WebDriver", ex);
+                    logger.Error("Error al cerrar WebDriver", ex);
                 }
             }
         }
@@ -171,7 +169,7 @@ namespace TestAutomationFramework.Core.WebDriver
         /// </summary>
         public bool IsDriverInitialized()
         {
-            return _driver != null;
+            return driver != null;
         }
     }
 }

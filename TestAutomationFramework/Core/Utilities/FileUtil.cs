@@ -1,14 +1,25 @@
-﻿namespace TestAutomationFramework.Core.Utilities
+﻿using TestAutomationFramework.Core.Configuration;
+using TestAutomationFramework.Core.Logging;
+
+namespace TestAutomationFramework.Core.Utilities
 {
-    public static class FileUtil
+    public class FileUtil
     {
-        public static bool WaitForFileToDownload(string fileName, int timeoutSeconds = 10)
+        private readonly ILogger logger;
+
+        public FileUtil(ILogger logger)
         {
-            var downloadDir = ProjectPaths.DownloadFolder;
+            this.logger = logger;
+        }
+
+        public bool WaitForFileToDownload(string fileName, int timeoutSeconds = 10)
+        {
+            logger.Info($"Waiting for the file '{fileName}' to be downloaded within {timeoutSeconds} seconds...");
+            var downloadDir = DownloadsPath.DownloadFolder;
 
 
             if (!Directory.Exists(downloadDir))
-                throw new DirectoryNotFoundException($"Download folder not found: {downloadDir}");
+                Directory.CreateDirectory(downloadDir);
 
             var timeout = DateTime.Now.AddSeconds(timeoutSeconds);
 

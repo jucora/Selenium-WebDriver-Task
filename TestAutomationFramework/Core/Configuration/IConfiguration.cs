@@ -1,9 +1,7 @@
-﻿// TestAutomationFramework.Core/Configuration/IConfiguration.cs
-
-namespace TestAutomationFramework.Core.Configuration
+﻿namespace TestAutomationFramework.Core.Configuration
 {
     /// <summary>
-    /// Interfaz que define los métodos para obtener configuración del framework
+    /// Interface that defines the methods for obtaining the framework configuration
     /// </summary>
     public interface IConfiguration
     {
