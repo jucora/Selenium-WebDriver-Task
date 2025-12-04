@@ -64,30 +64,30 @@ SearchAutomation/
 │    │    ├── AboutPage.cs
 │    │    └── JobListingsPage.cs
 ├── Core/
-├    ├── Configuration/
-├    ├    ├── ConfigurationManager.cs
-├    ├    └── IConfiguration.cs
-├    ├── Enums/
-├    ├    ├── BrowserType.cs
-├    ├    └── Environment.cs
-├    ├── Logging/
-├    ├    ├── Ilogger.cs
-├    ├    └── Logger.cs
-├    ├── Utilities/
-├    ├    ├── DownloadsPath.cs
-├    ├    ├── FileUtil.cs
-├    ├    ├── ScreenshotHelper.cs
-├    ├    └── WaitHelper.cs
-├    ├── WebDriver/
-├    ├    ├── BrowserFactory.cs
-├    ├    ├── DriverManager.cs
-├    ├    └── IBrowserFactory.cs
+│    ├── Configuration/
+│    │    ├── ConfigurationManager.cs
+│    │    └── IConfiguration.cs
+│    ├── Enums/
+│    │    ├── BrowserType.cs
+│    │    └── Environment.cs
+│    ├── Logging/
+│    │    ├── Ilogger.cs
+│    │    └── Logger.cs
+│    ├── Utilities/
+│    │    ├── DownloadsPath.cs
+│    │    ├── FileUtil.cs
+│    │    ├── ScreenshotHelper.cs
+│    │    └── WaitHelper.cs
+│    ├── WebDriver/
+│    │    ├── BrowserFactory.cs
+│    │    ├── DriverManager.cs
+│    │    └── IBrowserFactory.cs
 └── Test/
      ├── Configuration/
-     ├    ├── appsettings.Development.json
-     ├    ├── appsettings.json
-     ├    ├── appsettings.Production.json
-     ├    └── appsettings.Staging.json
+     │    ├── appsettings.Development.json
+     │    ├── appsettings.json
+     │    ├── appsettings.Production.json
+     │    └── appsettings.Staging.json
      ├── ArticleTitleConsistencyTests.cs
      ├── BaseTest.cs
      ├── CareerSearchTests.cs
