@@ -6,8 +6,8 @@ using TestAutomationFramework.Core.Logging;
 namespace TestAutomationFramework.Core.Utilities
 {
     /// <summary>
-    /// Clase helper para esperas explícitas
-    /// DRY Principle: Centraliza lógica de esperas reutilizables
+    /// Helper class for explicit waits
+    /// DRY Principle: Centralizes reusable wait logic
     /// </summary>
     public class WaitHelper
     {
@@ -21,79 +21,81 @@ namespace TestAutomationFramework.Core.Utilities
             var timeout = configuration.GetExplicitWait();
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
 
-            logger.Debug($"WaitHelper inicializado con timeout de {timeout}s");
+            logger.Debug($"WaitHelper initialized with a timeout of {timeout}s");
+
         }
 
         /// <summary>
-        /// Espera hasta que un elemento sea visible
+        /// Waits until an element is visible
         /// </summary>
         public IWebElement WaitForElementVisible(By locator)
         {
-            logger.Debug($"Esperando a que el elemento sea visible: {locator}");
+            logger.Debug($"Waiting for the element to become visible: {locator}");
+
             try
             {
                 var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
-                logger.Debug("Elemento visible encontrado");
+                logger.Debug("Visible element found");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                logger.Error($"Timeout esperando elemento visible: {locator}", ex);
+                logger.Error($"Timeout waiting for visible element: {locator}", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Espera hasta que un elemento sea clickeable
+        /// Waits until an element is clickable
         /// </summary>
         public IWebElement WaitForElementClickable(By locator)
         {
-            logger.Debug($"Esperando a que el elemento sea clickeable: {locator}");
+            logger.Debug($"Waiting for the element to become clickable: {locator}");
             try
             {
                 var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
-                logger.Debug("Elemento clickeable encontrado");
+                logger.Debug("Clickable element found");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                logger.Error($"Timeout esperando elemento clickeable: {locator}", ex);
+                logger.Error($"Timeout waiting for clickable element: {locator}", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Espera hasta que un elemento exista en el DOM
+        /// Waits until an element exists in the DOM
         /// </summary>
         public IWebElement WaitForElementExists(By locator)
         {
-            logger.Debug($"Esperando a que el elemento exista: {locator}");
+            logger.Debug($"Waiting for the element to exist: {locator}");
             try
             {
                 var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(locator));
-                logger.Debug("Elemento encontrado en DOM");
+                logger.Debug("Element found in DOM");
                 return element;
             }
             catch (WebDriverTimeoutException ex)
             {
-                logger.Error($"Timeout esperando elemento en DOM: {locator}", ex);
+                logger.Error($"Timeout waiting for element in the DOM: {locator}", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Espera una condición personalizada
+        /// Waits for a custom condition
         /// </summary>
         public T WaitForCondition<T>(Func<IWebDriver, T> condition)
         {
-            logger.Debug("Esperando condición personalizada");
+            logger.Debug("Waiting for custom condition");
             try
             {
                 return wait.Until(condition);
             }
             catch (WebDriverTimeoutException ex)
             {
-                logger.Error("Timeout esperando condición personalizada", ex);
+                logger.Error("Timeout waiting for custom condition", ex);
                 throw;
             }
         }

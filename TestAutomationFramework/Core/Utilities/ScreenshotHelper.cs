@@ -42,12 +42,12 @@ namespace TestAutomationFramework.Core.Utilities
                     logger.Debug($"Screenshot directory created: {screenshotPath}");
                 }
 
-                // Genera nombre de archivo con timestamp
+                // Generates a filename with a timestamp
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
                 var fileName = $"{testName}_{timestamp}.png";
                 var fullPath = Path.Combine(screenshotPath, fileName);
 
-                // Captura el screenshot
+                // Captures the screenshot
                 var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
                 screenshot.SaveAsFile(fullPath);
 
