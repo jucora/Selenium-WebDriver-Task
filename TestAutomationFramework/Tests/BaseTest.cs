@@ -9,9 +9,9 @@ using TestAutomationFramework.Business.Components;
 namespace TestAutomationFramework.Tests
 {
     /// <summary>
-    /// Clase base abstracta para todos los tests
-    /// DRY PRINCIPLE: Centraliza setup y teardown común a todos los tests
-    /// SOLID - Open/Closed: Abierta para extensión, cerrada para modificación
+    /// Abstract base class for all tests
+    /// DRY PRINCIPLE: Centralizes setup and teardown common to all tests
+    /// SOLID - Open/Closed: Open for extension, closed for modification
     /// </summary>
     [TestFixture]
     public abstract class BaseTest
@@ -27,53 +27,53 @@ namespace TestAutomationFramework.Tests
         //
 
         /// <summary>
-        /// Se ejecuta UNA VEZ antes de todos los tests de la clase
-        /// Ideal para configuración que no cambia entre tests
+        /// Runs ONCE before all tests in this class
+        /// Ideal for configuration that does not change between tests
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            // Inicializa configuración (Singleton)
+            // Initializes configuration (Singleton)
             Configuration = ConfigurationManager.Instance;
 
-            // Inicializa logger con el nombre de la clase de test
+            // Initializes logger with the test class name
             Logger = new Logger(GetType().Name);
 
             Logger.Info("=================================================");
-            Logger.Info($"INICIANDO SUITE DE TESTS: {GetType().Name}");
-            Logger.Info($"Ambiente: {Configuration.GetEnvironment()}");
-            Logger.Info($"Navegador: {Configuration.GetBrowser()}");
+            Logger.Info($"STARTING TEST SUITE: {GetType().Name}");
+            Logger.Info($"Environment: {Configuration.GetEnvironment()}");
+            Logger.Info($"Browser: {Configuration.GetBrowser()}");
             Logger.Info("=================================================");
         }
 
         /// <summary>
-        /// Se ejecuta ANTES de cada test individual
-        /// TEMPLATE METHOD PATTERN: Define estructura que subclases pueden extender
+        /// Runs BEFORE each individual test
+        /// TEMPLATE METHOD PATTERN: Defines structure that subclasses may extend
         /// </summary>
         [SetUp]
         public void Setup()
         {
             var testName = TestContext.CurrentContext.Test.Name;
-            Logger.Info($"▶ INICIANDO TEST: {testName}");
-            Logger.Info($"Descripción: {TestContext.CurrentContext.Test.FullName}");
+            Logger.Info($"STARTING TEST: {testName}");
+            Logger.Info($"Description: {TestContext.CurrentContext.Test.FullName}");
 
             try
             {
-                // Inicializa WebDriver usando Singleton + Factory
+                // Initializes WebDriver using Singleton + Factory
                 DriverManager.Instance.InitializeDriver();
                 Driver = DriverManager.Instance.Driver;
 
                 Driver.Manage().Window.Maximize();
 
-                // Inicializa helper de screenshots
+                // Initializes screenshot helper
                 ScreenshotHelper = new ScreenshotHelper(Logger, Configuration);
 
-                // Navega a la URL base configurada
+                // Navigates to configured base URL
                 DriverManager.Instance.NavigateToBaseUrl();
 
-                Logger.Info($"Test '{testName}' inicializado correctamente");
+                Logger.Info($"Test '{testName}' initialized successfully");
 
-                // Hook para subclases (Template Method Pattern)
+                // Hook for subclasses (Template Method Pattern)
                 AdditionalSetup();
 
                 navbar = new NavbarComponent(Driver, Logger);
@@ -83,14 +83,14 @@ namespace TestAutomationFramework.Tests
             }
             catch (Exception ex)
             {
-                Logger.Error($"Error durante el Setup del test '{testName}'", ex);
+                Logger.Error($"Error during test Setup '{testName}'", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Se ejecuta DESPUÉS de cada test individual
-        /// Maneja screenshots en caso de fallo
+        /// Runs AFTER each individual test
+        /// Handles screenshots in case of failure
         /// </summary>
         [TearDown]
         public void TearDown()
@@ -98,85 +98,85 @@ namespace TestAutomationFramework.Tests
             var testName = TestContext.CurrentContext.Test.Name;
             var testStatus = TestContext.CurrentContext.Result.Outcome.Status;
 
-            Logger.Info($"Estado del test '{testName}': {testStatus}");
+            Logger.Info($"Test '{testName}' status: {testStatus}");
 
             try
             {
-                // Si el test falló, captura screenshot con fecha y hora
+                // If the test failed, take screenshot with date and time
                 if (testStatus == NUnit.Framework.Interfaces.TestStatus.Failed)
                 {
-                    Logger.Error($"❌ TEST FALLIDO: {testName}");
-                    Logger.Error($"Mensaje: {TestContext.CurrentContext.Result.Message}");
+                    Logger.Error($"FAILED TEST: {testName}");
+                    Logger.Error($"Message: {TestContext.CurrentContext.Result.Message}");
 
-                    // Captura screenshot con timestamp automático
+                    // Takes screenshot with automatic timestamp
                     var screenshotPath = ScreenshotHelper.TakeScreenshot(Driver, testName);
 
                     if (!string.IsNullOrEmpty(screenshotPath))
                     {
-                        Logger.Info($"Screenshot guardado en: {screenshotPath}");
-                        // Adjunta el screenshot al reporte de NUnit
-                        TestContext.AddTestAttachment(screenshotPath, "Screenshot del Fallo");
+                        Logger.Info($"Screenshot saved at: {screenshotPath}");
+                        // Attach screenshot to NUnit report
+                        TestContext.AddTestAttachment(screenshotPath, "Failure Screenshot");
                     }
                 }
                 else if (testStatus == NUnit.Framework.Interfaces.TestStatus.Passed)
                 {
-                    Logger.Info($"✓ TEST EXITOSO: {testName}");
+                    Logger.Info($"SUCCESSFUL TEST: {testName}");
                 }
 
-                // Hook para subclases
+                // Hook for subclasses
                 AdditionalTearDown();
             }
             catch (Exception ex)
             {
-                Logger.Error($"Error durante TearDown del test '{testName}'", ex);
+                Logger.Error($"Error during TearDown of test '{testName}'", ex);
             }
             finally
             {
-                // Siempre cierra el navegador
+                // Always close the browser
                 DriverManager.Instance.QuitDriver();
-                Logger.Info($"▣ TEST FINALIZADO: {testName}");
+                Logger.Info($"TEST FINISHED: {testName}");
                 Logger.Info("─────────────────────────────────────────────────");
             }
         }
 
         /// <summary>
-        /// Se ejecuta UNA VEZ después de todos los tests de la clase
+        /// Runs ONCE after all tests in this class
         /// </summary>
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
             Logger.Info("=================================================");
-            Logger.Info($"FINALIZANDO SUITE DE TESTS: {GetType().Name}");
+            Logger.Info($"ENDING TEST SUITE: {GetType().Name}");
             Logger.Info("=================================================");
         }
 
-        #region Template Methods - Para que subclases personalicen
+        #region Template Methods - For subclass customization
 
         /// <summary>
-        /// TEMPLATE METHOD: Permite a clases hijas agregar setup adicional
-        /// YAGNI Principle: Solo se implementa en subclases que lo necesiten
+        /// TEMPLATE METHOD: Allows child classes to add extra setup
+        /// YAGNI Principle: Only implemented in subclasses that need it
         /// </summary>
         protected virtual void AdditionalSetup()
         {
-            // Implementación vacía por defecto
-            // Las subclases pueden override si necesitan setup adicional
+            // Empty default implementation
+            // Subclasses may override if they need additional setup
         }
 
         /// <summary>
-        /// TEMPLATE METHOD: Permite a clases hijas agregar teardown adicional
+        /// TEMPLATE METHOD: Allows child classes to add extra teardown
         /// </summary>
         protected virtual void AdditionalTearDown()
         {
-            // Implementación vacía por defecto
-            // Las subclases pueden override si necesitan teardown adicional
+            // Empty default implementation
+            // Subclasses may override if they need additional teardown
         }
 
         #endregion
 
-        #region Helper Methods para Tests
+        #region Helper Methods for Tests
 
         /// <summary>
-        /// Helper para capturar screenshot manual en cualquier punto del test
+        /// Helper to manually take a screenshot at any point in the test
         /// </summary>
         protected void TakeScreenshot(string reason)
         {

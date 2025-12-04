@@ -9,16 +9,16 @@ using TestAutomationFramework.Core.Utilities;
 namespace TestAutomationFramework.Core.WebDriver
 {
     /// <summary>
-    /// PATRÓN FACTORY: Crea instancias de WebDriver según el tipo de navegador
-    /// Encapsula la lógica de creación de drivers (SOLID - Single Responsibility)
-    /// Facilita agregar nuevos navegadores sin modificar código existente (SOLID - Open/Closed)
+    /// FACTORY PATTERN: Creates WebDriver instances based on the browser type
+    /// Encapsulates driver creation logic (SOLID - Single Responsibility)
+    /// Makes it easy to add new browsers without modifying existing code (SOLID - Open/Closed)
     /// </summary>
     public class BrowserFactory : IBrowserFactory
     {
         private readonly ILogger logger;
 
         /// <summary>
-        /// Constructor con inyección de dependencias del logger
+        /// Constructor with dependency injection for the logger
         /// </summary>
         public BrowserFactory(ILogger logger)
         {
@@ -26,19 +26,19 @@ namespace TestAutomationFramework.Core.WebDriver
         }
 
         /// <summary>
-        /// Crea una instancia de WebDriver según el tipo especificado
+        /// Creates a WebDriver instance based on the specified type
         /// FACTORY METHOD PATTERN
         /// </summary>
-        /// <param name="browserType">Tipo de navegador a crear</param>
-        /// <returns>Instancia configurada de IWebDriver</returns>
+        /// <param name="browserType">Type of browser to create</param>
+        /// <returns>Configured IWebDriver instance</returns>
         public IWebDriver CreateDriver(BrowserType browserType)
         {
-            logger.Info($"Creando instancia de WebDriver para navegador: {browserType}");
+            logger.Info($"Creating WebDriver instance for browser: {browserType}");
 
             IWebDriver driver;
 
-            // Switch para crear el driver apropiado
-            // KISS Principle: Simple y directo
+            // Switch to create the appropriate driver
+            // KISS Principle: Simple and direct
             switch (browserType)
             {
                 case BrowserType.Chrome:
@@ -54,84 +54,84 @@ namespace TestAutomationFramework.Core.WebDriver
                     break;
 
                 default:
-                    logger.Warn($"Tipo de navegador no reconocido: {browserType}. Usando Chrome por defecto.");
+                    logger.Warn($"Unrecognized browser type: {browserType}. Using Chrome by default.");
                     driver = CreateChromeDriver();
                     break;
             }
 
-            logger.Info($"WebDriver creado exitosamente para {browserType}");
+            logger.Info($"WebDriver successfully created for {browserType}");
             return driver;
         }
 
         /// <summary>
-        /// Crea y configura un driver de Chrome
-        /// DRY Principle: Configuración centralizada
+        /// Creates and configures a Chrome driver
+        /// DRY Principle: Centralized configuration
         /// </summary>
         private IWebDriver CreateChromeDriver()
         {
             var options = new ChromeOptions();
 
-            // Opciones comunes de Chrome para tests
+            // Common Chrome options for tests
             options.AddArgument("--start-maximized");
             options.AddArgument("--disable-notifications");
             options.AddArgument("--disable-popup-blocking");
 
-            // Configuración para descargas automáticas sin prompt
+            // Configuration for automatic downloads without prompt
             var downloadDir = DownloadsPath.DownloadFolder;
             options.AddUserProfilePreference("download.default_directory", downloadDir);
             options.AddUserProfilePreference("download.prompt_for_download", false);
             options.AddUserProfilePreference("download.directory_upgrade", true);
             options.AddUserProfilePreference("safebrowsing.enabled", true);
 
-            // Para ejecución en servidores sin interfaz gráfica (CI/CD)
-            // options.AddArgument("--headless");
+            // For execution on servers without a graphical interface (CI/CD)
+            // options.AddArgument("--headless"); // Uncomment if headless mode is needed
 
-            logger.Debug("Configurando ChromeOptions con argumentos estándar");
+            logger.Debug("Configuring ChromeOptions with standard arguments");
 
             return new ChromeDriver(options);
         }
 
         /// <summary>
-        /// Crea y configura un driver de Firefox
+        /// Creates and configures a Firefox driver
         /// </summary>
         private IWebDriver CreateFirefoxDriver()
         {
             var options = new FirefoxOptions();
 
-            // Opciones comunes de Firefox
+            // Common Firefox options
             options.AddArgument("--width=1920");
             options.AddArgument("--height=1080");
 
-            // Configuración para descargas automáticas sin prompt
+            // Configuration for automatic downloads without prompt
             var downloadDir = DownloadsPath.DownloadFolder;
             options.SetPreference("browser.download.folderList", 2);
             options.SetPreference("browser.download.dir", downloadDir);
             options.SetPreference("browser.download.useDownloadDir", true);
 
-            // Evitar popup de "guardar como"
+            // Avoid "save as" popup
             options.SetPreference("browser.helperApps.neverAsk.saveToDisk",
                 "application/pdf,application/octet-stream,application/vnd.ms-excel,application/zip");
 
-            // Desactivar visor interno de PDF para que los descargue
+            // Disable internal PDF viewer so files are downloaded
             options.SetPreference("pdfjs.disabled", true);
 
-            logger.Debug("Configurando FirefoxOptions con argumentos estándar");
+            logger.Debug("Configuring FirefoxOptions with standard arguments");
 
             return new FirefoxDriver(options);
         }
 
         /// <summary>
-        /// Crea y configura un driver de Edge
+        /// Creates and configures an Edge driver
         /// </summary>
         private IWebDriver CreateEdgeDriver()
         {
             var options = new EdgeOptions();
 
-            // Opciones comunes de Edge
+            // Common Edge options
             options.AddArgument("--start-maximized");
             options.AddArgument("--disable-notifications");
 
-            logger.Debug("Configurando EdgeOptions con argumentos estándar");
+            logger.Debug("Configuring EdgeOptions with standard arguments");
 
             return new EdgeDriver(options);
         }

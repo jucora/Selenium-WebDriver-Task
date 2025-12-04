@@ -6,14 +6,14 @@ using TestAutomationFramework.Core.Logging;
 namespace TestAutomationFramework.Core.WebDriver
 {
     /// <summary>
-    /// PATRÓN SINGLETON: Gestiona una única instancia de WebDriver por hilo de ejecución
-    /// Thread-safe usando ThreadLocal para ejecución paralela de tests
-    /// SOLID - Single Responsibility: Solo se encarga de gestionar el ciclo de vida del driver
+    /// SINGLETON PATTERN: Manages a single WebDriver instance per execution thread
+    /// Thread-safe using ThreadLocal for parallel test execution
+    /// SOLID - Single Responsibility: Only manages the driver lifecycle
     /// </summary>
     public sealed class DriverManager
     {
-        // ThreadLocal permite que cada hilo tenga su propia instancia del driver
-        // Esto es crucial para ejecutar tests en paralelo
+        // ThreadLocal allows each thread to have its own driver instance
+        // This is crucial for parallel test execution
         [ThreadStatic]
         private static DriverManager instance;
 
@@ -25,8 +25,8 @@ namespace TestAutomationFramework.Core.WebDriver
         private readonly IConfiguration configuration;
 
         /// <summary>
-        /// Constructor privado (Singleton Pattern)
-        /// Inicializa las dependencias necesarias
+        /// Private constructor (Singleton Pattern)
+        /// Initializes required dependencies
         /// </summary>
         private DriverManager()
         {
@@ -34,18 +34,18 @@ namespace TestAutomationFramework.Core.WebDriver
             configuration = ConfigurationManager.Instance;
             browserFactory = new BrowserFactory(logger);
 
-            logger.Info("DriverManager inicializado");
+            logger.Info("DriverManager initialized");
         }
 
         /// <summary>
-        /// Propiedad que proporciona acceso a la única instancia (Singleton)
-        /// Thread-safe para ejecución paralela de tests
+        /// Property providing access to the single instance (Singleton)
+        /// Thread-safe for parallel test execution
         /// </summary>
         public static DriverManager Instance
         {
             get
             {
-                // ThreadStatic hace que cada thread tenga su propia instancia
+                // ThreadStatic ensures each thread gets its own instance
                 if (instance == null)
                 {
                     lock (lockObject)
@@ -61,8 +61,8 @@ namespace TestAutomationFramework.Core.WebDriver
         }
 
         /// <summary>
-        /// Propiedad para acceder al WebDriver actual
-        /// Lanza excepción si el driver no ha sido inicializado
+        /// Property to access the current WebDriver
+        /// Throws an exception if the driver has not been initialized
         /// </summary>
         public IWebDriver Driver
         {
@@ -70,7 +70,7 @@ namespace TestAutomationFramework.Core.WebDriver
             {
                 if (driver == null)
                 {
-                    var errorMsg = "WebDriver no ha sido inicializado. Llama a InitializeDriver() primero.";
+                    var errorMsg = "WebDriver has not been initialized. Call InitializeDriver() first.";
                     logger.Error(errorMsg);
                     throw new InvalidOperationException(errorMsg);
                 }
@@ -79,71 +79,71 @@ namespace TestAutomationFramework.Core.WebDriver
         }
 
         /// <summary>
-        /// Inicializa el WebDriver usando la configuración del framework
-        /// YAGNI Principle: Solo crea el driver cuando realmente se necesita
+        /// Initializes the WebDriver using the framework configuration
+        /// YAGNI Principle: Creates the driver only when needed
         /// </summary>
         public void InitializeDriver()
         {
             if (driver != null)
             {
-                logger.Warn("WebDriver ya estaba inicializado. Cerrando instancia anterior.");
+                logger.Warn("WebDriver was already initialized. Closing previous instance.");
                 QuitDriver();
             }
 
             try
             {
-                // Obtiene el tipo de navegador desde la configuración
+                // Gets the browser type from configuration
                 var browserString = configuration.GetBrowser();
-                logger.Info($"Inicializando WebDriver para navegador: {browserString}");
+                logger.Info($"Initializing WebDriver for browser: {browserString}");
 
-                // Convierte el string a enum
+                // Converts string to enum
                 if (!Enum.TryParse<BrowserType>(browserString, true, out var browserType))
                 {
-                    logger.Warn($"Tipo de navegador '{browserString}' no válido. Usando Chrome por defecto.");
+                    logger.Warn($"Browser type '{browserString}' is not valid. Using Chrome as default.");
                     browserType = BrowserType.Chrome;
                 }
 
-                // Usa el Factory para crear el driver
+                // Uses the Factory to create the driver
                 driver = browserFactory.CreateDriver(browserType);
 
-                // Configura timeouts desde la configuración
+                // Configures timeouts from configuration
                 var implicitWait = configuration.GetImplicitWait();
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(implicitWait);
 
-                logger.Info($"WebDriver inicializado correctamente con timeout implícito de {implicitWait}s");
+                logger.Info($"WebDriver successfully initialized with implicit timeout of {implicitWait}s");
             }
             catch (Exception ex)
             {
-                logger.Error("Error al inicializar WebDriver", ex);
+                logger.Error("Error initializing WebDriver", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Navega a la URL base configurada para el ambiente actual
+        /// Navigates to the base URL configured for the current environment
         /// </summary>
         public void NavigateToBaseUrl()
         {
             var baseUrl = configuration.GetBaseUrl();
-            logger.Info($"Navegando a URL base: {baseUrl}");
+            logger.Info($"Navigating to base URL: {baseUrl}");
 
             Driver.Navigate().GoToUrl(baseUrl);
 
-            logger.Info("Navegación completada exitosamente");
+            logger.Info("Navigation completed successfully");
         }
 
         /// <summary>
-        /// Navega a una URL específica
+        /// Navigates to a specific URL
         /// </summary>
         public void NavigateToUrl(string url)
         {
-            logger.Info($"Navegando a URL: {url}");
+            logger.Info($"Navigating to URL: {url}");
             Driver.Navigate().GoToUrl(url);
         }
 
         /// <summary>
-        /// Cierra el navegador y libera recursos
-        /// DRY Principle: Centraliza la lógica de cierre
+        /// Closes the browser and releases resources
+        /// DRY Principle: Centralizes shutdown logic
         /// </summary>
         public void QuitDriver()
         {
@@ -151,21 +151,21 @@ namespace TestAutomationFramework.Core.WebDriver
             {
                 try
                 {
-                    logger.Info("Cerrando WebDriver...");
+                    logger.Info("Closing WebDriver...");
                     driver.Quit();
                     driver.Dispose();
                     driver = null;
-                    logger.Info("WebDriver cerrado correctamente");
+                    logger.Info("WebDriver closed successfully");
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("Error al cerrar WebDriver", ex);
+                    logger.Error("Error closing WebDriver", ex);
                 }
             }
         }
 
         /// <summary>
-        /// Verifica si el driver está activo
+        /// Checks whether the driver is initialized
         /// </summary>
         public bool IsDriverInitialized()
         {
