@@ -6,6 +6,9 @@ namespace TestAutomationFramework.Business.Components
 {
     public class NavbarComponent : BasePage
     {
+        private By ServiceCategoryLink(string category) =>
+            By.XPath($"//a[@class='top-navigation__sub-link' and normalize-space()='{category}']");
+
         private static readonly By InsightsLink =
             By.CssSelector("ul[class='top-navigation__row'] li:nth-child(3) span:nth-child(1) a:nth-child(1)");
 
@@ -36,6 +39,11 @@ namespace TestAutomationFramework.Business.Components
         {
             Click(CareersLink);
             return new CareersPage(Driver, Logger);
+        }
+
+        public void ClickServiceCategory(string category) 
+        {
+            Click(ServiceCategoryLink(category), $"Service link: {category}");
         }
 
         public NavbarComponent ClickMagnifierIcon()
