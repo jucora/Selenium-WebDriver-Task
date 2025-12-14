@@ -1,31 +1,29 @@
 ﻿using NUnit.Framework;
 using Reqnroll;
-using OpenQA.Selenium;
-using TestAutomationFramework.Business.Components;
 using TestAutomationFramework.Business.Pages;
-using TestAutomationFramework.Core.Logging;
 
 [Binding]
-public class GlobalSearchSteps : BasePage
+public class GlobalSearchSteps
 {
-    private NavbarComponent navbar;
     private SearchPage searchPage;
     private IEnumerable<string> searchResults;
+    private readonly UiTestContext context;
 
-    public GlobalSearchSteps(IWebDriver driver, ILogger logger) : base(driver, logger) {}
+    public GlobalSearchSteps(UiTestContext context) 
+    {
+        this.context = context;
+    }
 
     [Given("the user opens the global search")]
     public void GivenTheUserOpensTheGlobalSearch()
     {
-        navbar = new NavbarComponent(Driver, Logger);
-        navbar.ClickMagnifierIcon();
+        context.Navbar.ClickMagnifierIcon();
     }
 
     [When("the user searches for \"(.*)\"")]
     public void WhenTheUserSearchesFor(string keyword)
     {
-        navbar.EnterSearchKeyword(keyword);
-        searchPage = navbar.ClickFindButton();
+        context.Navbar.ClickFindButton();
 
         searchResults = searchPage.GetSearchResults(keyword);
     }

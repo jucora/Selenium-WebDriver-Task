@@ -1,64 +1,49 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using Reqnroll;
+﻿using Reqnroll;
 using Reqnroll.BoDi;
 using TestAutomationFramework.Business.Components;
 using TestAutomationFramework.Core.Configuration;
-using TestAutomationFramework.Core.Enums;
 using TestAutomationFramework.Core.Logging;
+using TestAutomationFramework.Core.Utilities;
 using TestAutomationFramework.Core.WebDriver;
 
-namespace TestAutomationFramework.Tests.Hooks
+[Binding]
+public class ReqnrollDriverHooks
 {
-    [Binding]
-    public class ReqnrollDriverHooks
+    private readonly IObjectContainer container;
+
+    public ReqnrollDriverHooks(IObjectContainer container)
     {
-        private readonly IObjectContainer Container;
-        private IWebDriver Driver;
-        private ILogger Logger;
-        private IConfiguration Config;
+        this.container = container;
+    }
 
-        //
-        protected NavbarComponent navbar = null!;
-        protected CookiesComponent cookies = null!;
-        //
+    [BeforeScenario]
+    public void Setup()
+    {
+        var logger = new Logger("ReqnrollTest");
 
-        public ReqnrollDriverHooks(IObjectContainer container)
+        DriverManager.Instance.InitializeDriver();
+        var driver = DriverManager.Instance.Driver;
+
+        driver.Manage().Window.Maximize();
+        driver.Navigate().GoToUrl(ConfigurationManager.Instance.GetBaseUrl());
+
+        var cookies = new CookiesComponent(driver, logger);
+        cookies.AcceptCookiesIfPresent();
+
+        var context = new UiTestContext
         {
-            Container = container;
-        }
+            Driver = driver,
+            Logger = logger,
+            Navbar = new NavbarComponent(driver, logger),
+            WaitHelper = new WaitHelper(driver, logger, ConfigurationManager.Instance)
+        };
 
-        [BeforeScenario]
-        public void Setup()
-        {
-            // ======== CONFIGURATION ========
-            Config = ConfigurationManager.Instance;
-            Container.RegisterInstanceAs(Config);
+        container.RegisterInstanceAs(context);
+    }
 
-            // ======== LOGGER ========
-            Logger = new Logger("ReqnrollTest");
-            Container.RegisterInstanceAs(Logger);
-
-            // ======== WEBDRIVER ========
-            BrowserFactory browserFactory = new BrowserFactory(Logger);
-            Driver = browserFactory.CreateDriver(BrowserType.Chrome);
-            Container.RegisterInstanceAs(Driver);
-
-            Logger.Info("WebDriver initialized for Reqnroll scenario.");
-
-            //
-            Driver.Navigate().GoToUrl("https://www.epam.com/");
-
-            Driver.Manage().Window.Maximize();
-
-            cookies = new CookiesComponent(Driver, Logger);
-            cookies.AcceptCookiesIfPresent();
-        }
-
-        [AfterScenario]
-        public void TearDown()
-        {
-            Driver?.Quit();
-        }
+    [AfterScenario]
+    public void TearDown()
+    {
+        DriverManager.Instance.QuitDriver();
     }
 }

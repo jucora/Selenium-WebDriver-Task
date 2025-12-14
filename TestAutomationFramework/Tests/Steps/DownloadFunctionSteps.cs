@@ -1,23 +1,23 @@
 ﻿using NUnit.Framework;
 using Reqnroll;
-using OpenQA.Selenium;
-using TestAutomationFramework.Business.Components;
 using TestAutomationFramework.Business.Pages;
-using TestAutomationFramework.Core.Logging;
 using TestAutomationFramework.Core.Utilities;
 
 [Binding]
-public class DownloadFunctionSteps : BasePage
+public class DownloadFunctionSteps
 {
     private AboutPage aboutPage;
+    private readonly UiTestContext context;
 
-    public DownloadFunctionSteps(IWebDriver driver, ILogger logger) : base(driver, logger) {}
+    public DownloadFunctionSteps(UiTestContext context)
+    {
+        this.context = context;
+    }
 
     [Given("the user is on the About page")]
     public void GivenTheUserIsOnTheAboutPage()
     {
-        var navbar = new NavbarComponent(Driver, Logger);
-        aboutPage = navbar.ClickAboutLink();
+        aboutPage = context.Navbar.ClickAboutLink();
     }
 
     [When("the user clicks the download button")]
@@ -29,7 +29,7 @@ public class DownloadFunctionSteps : BasePage
     [Then("the file \"(.*)\" should be downloaded")]
     public void ThenTheFileShouldBeDownloaded(string fileName)
     {
-        var fileUtil = new FileUtil(Logger);
+        var fileUtil = new FileUtil(context.Logger);
 
         bool fileDownloaded = fileUtil.WaitForFileToDownload(fileName);
 

@@ -1,23 +1,23 @@
 ﻿using NUnit.Framework;
 using Reqnroll;
-using OpenQA.Selenium;
-using TestAutomationFramework.Business.Components;
 using TestAutomationFramework.Business.Pages;
-using TestAutomationFramework.Core.Logging;
 
 [Binding]
-public class CareerSearchSteps : BasePage
+public class CareerSearchSteps
 {
     private CareersPage careersPage;
     private JobListingsPage jobListingsPage;
+    private readonly UiTestContext context;
 
-    public CareerSearchSteps(IWebDriver driver, ILogger logger) : base(driver, logger){ }
+    public CareerSearchSteps(UiTestContext context)
+    {
+        this.context = context;
+    }
 
     [Given("the user is on the Careers page")]
     public void GivenTheUserIsOnTheCareersPage()
     {
-        var navbar = new NavbarComponent(Driver, Logger);
-        careersPage = navbar.ClickCareersLink();
+        careersPage = context.Navbar.ClickCareersLink();
     }
 
     [When("the user enters the keyword \"(.*)\"")]
@@ -53,7 +53,7 @@ public class CareerSearchSteps : BasePage
     [Then("the job description should contain the keyword \"(.*)\"")]
     public void ThenJobDescriptionShouldContainKeyword(string keyword)
     {
-        bool containsKeyword = Driver.PageSource.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+        bool containsKeyword = context.Driver.PageSource.Contains(keyword, StringComparison.OrdinalIgnoreCase);
 
         Assert.That(containsKeyword, Is.True,
             $"Expected to find keyword '{keyword}' in the job description, but it was not found.");

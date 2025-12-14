@@ -1,24 +1,23 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using Reqnroll;
-using TestAutomationFramework.Business.Pages;
 using TestAutomationFramework.Business.Pages.Services.AI;
-using TestAutomationFramework.Core.Logging;
-using TestAutomationFramework.Core.Utilities;
 
 namespace TestAutomationFramework.Tests.Steps
 {
     [Binding]
-    public class ServicesPageSteps : BasePage
+    public class ServicesPageSteps
     {
-        // Pages
         private AIServiceBasePage? CurrentAIPage;
+        private readonly UiTestContext context;
 
-        public ServicesPageSteps(IWebDriver driver, ILogger logger) : base(driver, logger){}
-
-        // Locators for top navigation
         private static readonly By ServicesMenu =
             By.XPath("//span[normalize-space()='Services']");
+
+        public ServicesPageSteps(UiTestContext context)
+        {
+            this.context = context;
+        }
 
         private static By DynamicServiceCategory(string category) =>
             By.XPath($"//a[@class='top-navigation__sub-link' and normalize-space(.) = '{category}']");
@@ -28,8 +27,7 @@ namespace TestAutomationFramework.Tests.Steps
         [Given(@"the user is on the EPAM homepage")]
         public void GivenUserIsOnHomepage()
         {
-            Logger.Info("Navigating to EPAM homepage...");
-            Driver.Navigate().GoToUrl("https://www.epam.com/");
+            context.Logger.Info("User is at the EPAM homepage...");
         }
 
         [When(@"the user navigates to the ""(.*)"" section")]
@@ -38,32 +36,31 @@ namespace TestAutomationFramework.Tests.Steps
             if (!sectionName.Equals("Services", StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException($"Unknown section: {sectionName}");
 
-            Logger.Info("Hovering over the Services menu...");
+            context.Logger.Info("Hovering over the Services menu...");
 
-            var servicesElement = WaitHelper.WaitForElementVisible(ServicesMenu);
+            var servicesElement = context.WaitHelper.WaitForElementVisible(ServicesMenu);
 
-            Actions actions = new Actions(Driver);
+            Actions actions = new Actions(context.Driver);
             actions.MoveToElement(servicesElement).Perform();
 
-            Logger.Info("Hover performed successfully on 'Services' menu.");
+            context.Logger.Info("Hover performed successfully on 'Services' menu.");
         }
 
         [When(@"the user selects the ""(.*)"" category")]
         public void WhenUserSelectsServiceCategory(string serviceCategory)
         {
-            Logger.Info($"Selecting category: {serviceCategory}");
+            context.Logger.Info($"Selecting category: {serviceCategory}");
 
             var categoryLocator = DynamicServiceCategory(serviceCategory);
-            var categoryElement = WaitHelper.WaitForElementClickable(categoryLocator);
+            var categoryElement = context.WaitHelper.WaitForElementClickable(categoryLocator);
 
             categoryElement.Click();
-            WaitForPageLoad();
 
             // Assign the correct page object to the base type
             CurrentAIPage = serviceCategory switch
             {
-                "Generative AI" => new GenerativeAIPage(Driver, Logger),
-                "Responsible AI" => new ResponsibleAIPage(Driver, Logger),
+                "Generative AI" => new GenerativeAIPage(context.Driver, context.Logger),
+                "Responsible AI" => new ResponsibleAIPage(context.Driver, context.Logger),
 
                 _ => throw new ArgumentException($"Unknown service category: {serviceCategory}")
             };
@@ -75,14 +72,14 @@ namespace TestAutomationFramework.Tests.Steps
             if (CurrentAIPage == null)
                 throw new InvalidOperationException("AI Page is not initialized.");
 
-            Logger.Info($"Validating page title contains: {expectedTitle}");
+            context.Logger.Info($"Validating page title contains: {expectedTitle}");
 
             string actualTitle = CurrentAIPage.GetServiceTitle();
 
             if (!actualTitle.Contains(expectedTitle, StringComparison.OrdinalIgnoreCase))
                 throw new Exception($"Expected title to contain '{expectedTitle}' but was '{actualTitle}'");
 
-            Logger.Info("Title validation successful.");
+            context.Logger.Info("Title validation successful.");
         }
 
 
@@ -92,14 +89,14 @@ namespace TestAutomationFramework.Tests.Steps
             if (CurrentAIPage == null)
                 throw new InvalidOperationException("AI Page is not initialized.");
 
-            Logger.Info($"Validating section '{sectionName}' is visible...");
+            context.Logger.Info($"Validating section '{sectionName}' is visible...");
 
             bool isDisplayed = CurrentAIPage.IsRelatedExpertiseDisplayed();
 
             if (!isDisplayed)
                 throw new Exception($"Expected section '{sectionName}' to be displayed, but it was not.");
 
-            Logger.Info($"Section '{sectionName}' is displayed.");
+            context.Logger.Info($"Section '{sectionName}' is displayed.");
         }
 
 

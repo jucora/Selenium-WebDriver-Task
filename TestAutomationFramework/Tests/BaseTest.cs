@@ -21,10 +21,8 @@ namespace TestAutomationFramework.Tests
         protected IConfiguration Configuration = null!;
         protected ScreenshotHelper ScreenshotHelper = null!;
 
-        //
         protected NavbarComponent navbar = null!;
         protected CookiesComponent cookies = null!;
-        //
 
         /// <summary>
         /// Runs ONCE before all tests in this class

@@ -6,7 +6,7 @@ namespace TestAutomationFramework.Business.Components
 {
     public class NavbarComponent : BasePage
     {
-        private By ServiceCategoryLink(string category) =>
+        private static By ServiceCategoryLink(string category) =>
             By.XPath($"//a[@class='top-navigation__sub-link' and normalize-space()='{category}']");
 
         private static readonly By InsightsLink =
