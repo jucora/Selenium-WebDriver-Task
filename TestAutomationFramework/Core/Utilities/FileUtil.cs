@@ -1,4 +1,4 @@
-﻿using TestAutomationFramework.Core.Configuration;
+﻿using System.Diagnostics;
 using TestAutomationFramework.Core.Logging;
 
 namespace TestAutomationFramework.Core.Utilities
@@ -12,33 +12,37 @@ namespace TestAutomationFramework.Core.Utilities
             this.logger = logger;
         }
 
-        public bool WaitForFileToDownload(string fileName, int timeoutSeconds = 10)
+        public async Task<bool> WaitForFileToDownloadAsync(
+            string fileName,
+            int timeoutSeconds = 10,
+            int pollingMilliseconds = 500)
         {
             logger.Info($"Waiting for the file '{fileName}' to be downloaded within {timeoutSeconds} seconds...");
-            var downloadDir = DownloadsPath.DownloadFolder;
 
+            var downloadDir = DownloadsPath.DownloadFolder;
 
             if (!Directory.Exists(downloadDir))
                 Directory.CreateDirectory(downloadDir);
 
-            var timeout = DateTime.Now.AddSeconds(timeoutSeconds);
+            var timeout = TimeSpan.FromSeconds(timeoutSeconds);
+            var stopwatch = Stopwatch.StartNew();
 
-            while (DateTime.Now < timeout)
+            while (stopwatch.Elapsed < timeout)
             {
-                var files = Directory.GetFiles(downloadDir);
-
-                bool exists = files.Any(f =>
-                    Path.GetFileName(f).Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
-                    !f.EndsWith(".crdownload")
-                );
+                var exists = Directory
+                    .GetFiles(downloadDir)
+                    .Any(f =>
+                        Path.GetFileName(f)
+                            .Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
+                        !f.EndsWith(".crdownload"));
 
                 if (exists)
                     return true;
 
-                Thread.Sleep(500); // checks every 0.5 seconds
+                await Task.Delay(pollingMilliseconds);
             }
 
-            return false; // if it never appeared
+            return false;
         }
     }
 }

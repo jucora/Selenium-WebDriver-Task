@@ -170,7 +170,7 @@ namespace TestAutomationFramework.Business.Pages
         {
             Logger.Debug($"Running JavaScript: {script}");
             var jsExecutor = (IJavaScriptExecutor)Driver;
-            return jsExecutor.ExecuteScript(script, args);
+            return jsExecutor.ExecuteScript(script, args)!;
         }
 
         /// <summary>

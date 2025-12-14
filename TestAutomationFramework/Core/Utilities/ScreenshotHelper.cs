@@ -68,7 +68,7 @@ namespace TestAutomationFramework.Core.Utilities
         public string TakeScreenshot(IWebDriver driver, string testName, string reason)
         {
             logger.Info($"Capturing screenshot - Reason: {reason}");
-            return TakeScreenshot(driver, testName);
+            return TakeScreenshot(driver, testName)!;
         }
     }
 }

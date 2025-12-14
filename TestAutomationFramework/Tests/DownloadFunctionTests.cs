@@ -9,14 +9,14 @@ namespace SearchAutomation.Tests
     public class DownloadFunctionTests : BaseTest
     {
         [Test]
-        public void ValidateDownloadFunction() 
+        public async Task ValidateDownloadFunction() 
         {
             AboutPage aboutPage = navbar.ClickAboutLink();
             aboutPage.ClickDownloadButton();
 
             FileUtil fileUtil = new FileUtil(Logger);
-            Assert.That(
-                fileUtil.WaitForFileToDownload("EPAM_Corporate_Overview_Sept_25.pdf"), Is.True,
+            Assert.That(await fileUtil.WaitForFileToDownloadAsync("EPAM_Corporate_Overview_Sept_25.pdf"), 
+                Is.True,
                 "The file EPAM_Systems_Company_Overview.pdf was NOT downloaded");
         }
     }

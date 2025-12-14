@@ -27,11 +27,11 @@ public class DownloadFunctionSteps
     }
 
     [Then("the file \"(.*)\" should be downloaded")]
-    public void ThenTheFileShouldBeDownloaded(string fileName)
+    public async Task ThenTheFileShouldBeDownloaded(string fileName)
     {
         var fileUtil = new FileUtil(context.Logger);
 
-        bool fileDownloaded = fileUtil.WaitForFileToDownload(fileName);
+        bool fileDownloaded = await fileUtil.WaitForFileToDownloadAsync(fileName);
 
         Assert.That(fileDownloaded, Is.True,
             $"The file '{fileName}' was NOT downloaded");
