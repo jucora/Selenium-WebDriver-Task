@@ -24,12 +24,6 @@ namespace TestAutomationFramework.Tests.Steps
 
         #region Step Definitions
 
-        [Given(@"the user is on the EPAM homepage")]
-        public void GivenUserIsOnHomepage()
-        {
-            context.Logger.Info("User is at the EPAM homepage...");
-        }
-
         [When(@"the user navigates to the ""(.*)"" section")]
         public void WhenUserNavigatesToServices(string sectionName)
         {

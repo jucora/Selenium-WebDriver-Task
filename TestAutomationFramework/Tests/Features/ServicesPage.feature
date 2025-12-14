@@ -5,7 +5,6 @@
 
   @navigation @services
   Scenario Outline: Validate navigation to a specific Services category
-    Given the user is on the EPAM homepage
     When the user navigates to the "Services" section
     And the user selects the "<ServiceCategory>" category
     Then the page title should contain "<ExpectedTitle>"

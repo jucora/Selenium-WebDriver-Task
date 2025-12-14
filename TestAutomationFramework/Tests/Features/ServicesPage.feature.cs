@@ -143,18 +143,15 @@ namespace TestAutomationFramework.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 8
-    await testRunner.GivenAsync("the user is on the EPAM homepage", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 9
     await testRunner.WhenAsync("the user navigates to the \"Services\" section", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 10
+#line 9
     await testRunner.AndAsync(string.Format("the user selects the \"{0}\" category", serviceCategory), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 11
+#line 10
     await testRunner.ThenAsync(string.Format("the page title should contain \"{0}\"", expectedTitle), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 12
+#line 11
     await testRunner.AndAsync("the \"Our Related Expertise\" section should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
