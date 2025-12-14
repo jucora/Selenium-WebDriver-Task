@@ -2,13 +2,14 @@
 using OpenQA.Selenium.Interactions;
 using Reqnroll;
 using TestAutomationFramework.Business.Pages.Services.AI;
+using TestAutomationFramework.Tests.Context;
 
 namespace TestAutomationFramework.Tests.Steps
 {
     [Binding]
     public class ServicesPageSteps
     {
-        private AIServiceBasePage? CurrentAIPage;
+        private AIServiceBasePage CurrentAIPage = null!;
         private readonly UiTestContext context;
 
         private static readonly By ServicesMenu =

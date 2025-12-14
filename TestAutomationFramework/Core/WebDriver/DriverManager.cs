@@ -15,11 +15,11 @@ namespace TestAutomationFramework.Core.WebDriver
         // ThreadLocal allows each thread to have its own driver instance
         // This is crucial for parallel test execution
         [ThreadStatic]
-        private static DriverManager instance;
+        private static DriverManager? instance;
 
         private static readonly object lockObject = new object();
 
-        private IWebDriver driver;
+        private IWebDriver? driver;
         private readonly IBrowserFactory browserFactory;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;

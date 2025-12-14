@@ -2,38 +2,43 @@
 using Reqnroll;
 using TestAutomationFramework.Business.Pages;
 using TestAutomationFramework.Core.Utilities;
+using TestAutomationFramework.Tests.Context;
 
-[Binding]
-public class DownloadFunctionSteps
+namespace TestAutomationFramework.Tests.Steps
 {
-    private AboutPage aboutPage;
-    private readonly UiTestContext context;
 
-    public DownloadFunctionSteps(UiTestContext context)
+    [Binding]
+    public class DownloadFunctionSteps
     {
-        this.context = context;
-    }
+        private AboutPage aboutPage = null!;
+        private readonly UiTestContext context;
 
-    [Given("the user is on the About page")]
-    public void GivenTheUserIsOnTheAboutPage()
-    {
-        aboutPage = context.Navbar.ClickAboutLink();
-    }
+        public DownloadFunctionSteps(UiTestContext context)
+        {
+            this.context = context;
+        }
 
-    [When("the user clicks the download button")]
-    public void WhenTheUserClicksTheDownloadButton()
-    {
-        aboutPage.ClickDownloadButton();
-    }
+        [Given("the user is on the About page")]
+        public void GivenTheUserIsOnTheAboutPage()
+        {
+            aboutPage = context.Navbar.ClickAboutLink();
+        }
 
-    [Then("the file \"(.*)\" should be downloaded")]
-    public async Task ThenTheFileShouldBeDownloaded(string fileName)
-    {
-        var fileUtil = new FileUtil(context.Logger);
+        [When("the user clicks the download button")]
+        public void WhenTheUserClicksTheDownloadButton()
+        {
+            aboutPage.ClickDownloadButton();
+        }
 
-        bool fileDownloaded = await fileUtil.WaitForFileToDownloadAsync(fileName);
+        [Then("the file \"(.*)\" should be downloaded")]
+        public async Task ThenTheFileShouldBeDownloaded(string fileName)
+        {
+            var fileUtil = new FileUtil(context.Logger);
 
-        Assert.That(fileDownloaded, Is.True,
-            $"The file '{fileName}' was NOT downloaded");
+            bool fileDownloaded = await fileUtil.WaitForFileToDownloadAsync(fileName);
+
+            Assert.That(fileDownloaded, Is.True,
+                $"The file '{fileName}' was NOT downloaded");
+        }
     }
 }

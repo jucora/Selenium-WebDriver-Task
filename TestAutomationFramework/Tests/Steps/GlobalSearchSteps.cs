@@ -1,42 +1,46 @@
 ﻿using NUnit.Framework;
 using Reqnroll;
 using TestAutomationFramework.Business.Pages;
+using TestAutomationFramework.Tests.Context;
 
-[Binding]
-public class GlobalSearchSteps
+namespace TestAutomationFramework.Tests.Steps
 {
-    private SearchPage searchPage;
-    private IEnumerable<string> searchResults;
-    private readonly UiTestContext context;
-
-    public GlobalSearchSteps(UiTestContext context) 
+    [Binding]
+    public class GlobalSearchSteps
     {
-        this.context = context;
-    }
+        private readonly SearchPage searchPage = null!;
+        private IEnumerable<string> searchResults = null!;
+        private readonly UiTestContext context;
 
-    [Given("the user opens the global search")]
-    public void GivenTheUserOpensTheGlobalSearch()
-    {
-        context.Navbar.ClickMagnifierIcon();
-    }
+        public GlobalSearchSteps(UiTestContext context)
+        {
+            this.context = context;
+        }
 
-    [When("the user searches for \"(.*)\"")]
-    public void WhenTheUserSearchesFor(string keyword)
-    {
-        context.Navbar.ClickFindButton();
+        [Given("the user opens the global search")]
+        public void GivenTheUserOpensTheGlobalSearch()
+        {
+            context.Navbar.ClickMagnifierIcon();
+        }
 
-        searchResults = searchPage.GetSearchResults(keyword);
-    }
+        [When("the user searches for \"(.*)\"")]
+        public void WhenTheUserSearchesFor(string keyword)
+        {
+            context.Navbar.ClickFindButton();
 
-    [Then("all search results should contain \"(.*)\"")]
-    public void ThenAllSearchResultsShouldContain(string keyword)
-    {
-        bool allContainKeyword = searchResults.All(text =>
-            text.Contains(keyword, StringComparison.OrdinalIgnoreCase)
-        );
+            searchResults = searchPage.GetSearchResults(keyword);
+        }
 
-        Assert.That(allContainKeyword, Is.False,
-            $"Not all links contain the word '{keyword}'.\n" +
-            $"Texts: {string.Join(", ", searchResults)}");
+        [Then("all search results should contain \"(.*)\"")]
+        public void ThenAllSearchResultsShouldContain(string keyword)
+        {
+            bool allContainKeyword = searchResults.All(text =>
+                text.Contains(keyword, StringComparison.OrdinalIgnoreCase)
+            );
+
+            Assert.That(allContainKeyword, Is.False,
+                $"Not all links contain the word '{keyword}'.\n" +
+                $"Texts: {string.Join(", ", searchResults)}");
+        }
     }
 }
