@@ -8,7 +8,7 @@ namespace TestAutomationFramework.Tests.Steps
     [Binding]
     public class GlobalSearchSteps
     {
-        private readonly SearchPage searchPage = null!;
+        private SearchPage searchPage; 
         private IEnumerable<string> searchResults = null!;
         private readonly UiTestContext context;
 
@@ -26,14 +26,15 @@ namespace TestAutomationFramework.Tests.Steps
         [When("the user searches for \"(.*)\"")]
         public void WhenTheUserSearchesFor(string keyword)
         {
-            context.Navbar.ClickFindButton();
-
-            searchResults = searchPage.GetSearchResults(keyword);
+            context.Navbar.EnterSearchKeyword(keyword);
+            searchPage = context.Navbar.ClickFindButton();
         }
 
         [Then("all search results should contain \"(.*)\"")]
         public void ThenAllSearchResultsShouldContain(string keyword)
         {
+            searchResults = searchPage.GetSearchResults(keyword);
+
             bool allContainKeyword = searchResults.All(text =>
                 text.Contains(keyword, StringComparison.OrdinalIgnoreCase)
             );
