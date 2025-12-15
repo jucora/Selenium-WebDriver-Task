@@ -8,7 +8,7 @@ namespace TestAutomationFramework.Tests.Steps
     [Binding]
     public class GlobalSearchSteps
     {
-        private SearchPage searchPage; 
+        private SearchPage searchPage = null!; 
         private IEnumerable<string> searchResults = null!;
         private readonly UiTestContext context;
 
