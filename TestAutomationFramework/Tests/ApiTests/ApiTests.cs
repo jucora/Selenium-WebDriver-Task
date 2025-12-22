@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
-using NLog;
 using NUnit.Framework;
 using RestSharp;
 using System.Net;
+using TestAutomationFramework.Core.Logging;
 
 namespace TestAutomationFramework.Tests.ApiTests
 {
@@ -12,7 +12,18 @@ namespace TestAutomationFramework.Tests.ApiTests
     public class ApiTests
     {
         private RestClient _client = null!;
-        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+        private ILogger Logger = null!;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            // Initializes logger with the test class name
+            Logger = new Logger(GetType().Name);
+
+            Logger.Info("=================================================");
+            Logger.Info($"STARTING TEST: {GetType().Name}");
+            Logger.Info("=================================================");
+        }
 
         [SetUp]
         public void Setup()
