@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 using System.Net;
+using TestAutomationFramework.Core.Configuration.Api;
 using TestAutomationFramework.Core.Logging;
 
 namespace TestAutomationFramework.Tests.ApiTests
@@ -13,11 +15,12 @@ namespace TestAutomationFramework.Tests.ApiTests
     {
         private RestClient _client = null!;
         private ILogger Logger = null!;
+        private UsersApiClient _usersApi = null!;
+        private readonly IApiConfiguration _apiConfiguration = ApiConfigurationManager.Instance;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            // Initializes logger with the test class name
             Logger = new Logger(GetType().Name);
 
             Logger.Info("=================================================");
@@ -28,7 +31,8 @@ namespace TestAutomationFramework.Tests.ApiTests
         [SetUp]
         public void Setup()
         {
-            _client = new RestClient("https://jsonplaceholder.typicode.com");
+            _client = new RestClient(_apiConfiguration.GetBaseUrl());
+            _usersApi = new UsersApiClient(_client);
             Logger.Info("Test started");
         }
 
@@ -37,28 +41,33 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Sending GET /users");
 
-            var request = new RestRequestBuilder("/users", Method.Get)
-                .Build();
-
-            var response = _client.Execute(request);
+            var response = _usersApi.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var users = JArray.Parse(
+            var users = JsonConvert.DeserializeObject<List<UserDto>>(
                 response.Content ?? throw new InvalidOperationException("Response content is null"));
 
-            var requiredFields = new[]
-            {
-                "id","name","username","email","address","phone","website","company"
-            };
+            Assert.That(users, Is.Not.Null, "Users list is null");
+            Assert.That(users, Is.Not.Empty, "Users list is empty");
 
-            foreach (var user in users)
+            foreach (var user in users!)
             {
-                foreach (var field in requiredFields)
+                Logger.Info($"Validating user with ID {user.Id}");
+
+                Assert.Multiple(() =>
                 {
-                    Logger.Info($"Validating field '{field}' for user ID {user["id"]}");
-                    Assert.That(user[field], Is.Not.Null);
-                }
+                    Assert.That(user.Id, Is.GreaterThan(0), "User Id is invalid");
+                    Assert.That(user.Name, Is.Not.Empty, $"Name is empty for user {user.Id}");
+                    Assert.That(user.Username, Is.Not.Empty, $"Username is empty for user {user.Id}");
+                    Assert.That(user.Email, Is.Not.Empty, $"Email is empty for user {user.Id}");
+                    Assert.That(user.Phone, Is.Not.Empty, $"Phone is empty for user {user.Id}");
+                    Assert.That(user.Website, Is.Not.Empty, $"Website is empty for user {user.Id}");
+
+                    Assert.That(user.Address, Is.Not.Null, $"Address is null for user {user.Id}");
+                    Assert.That(user.Company, Is.Not.Null, $"Company is null for user {user.Id}");
+                    Assert.That(user.Company.Name, Is.Not.Empty, $"Company name is empty for user {user.Id}");
+                });
             }
 
             Logger.Info("Users list validated successfully");
@@ -69,8 +78,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Validating response headers");
 
-            var request = new RestRequestBuilder("/users", Method.Get).Build();
-            var response = _client.Execute(request);
+            var response = _usersApi.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
@@ -88,8 +96,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Validating users content");
 
-            var request = new RestRequestBuilder("/users", Method.Get).Build();
-            var response = _client.Execute(request);
+            var response = _usersApi.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
@@ -114,15 +121,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Creating new user");
 
-            var request = new RestRequestBuilder("/users", Method.Post)
-                .AddJsonBody(new
-                {
-                    name = "John Doe",
-                    username = "jdoe"
-                })
-                .Build();
-
-            var response = _client.Execute(request);
+            var response = _usersApi.CreateUser(_apiConfiguration.GetTestUser());
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
 

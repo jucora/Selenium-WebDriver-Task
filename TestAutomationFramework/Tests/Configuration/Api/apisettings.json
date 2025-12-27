@@ -1,0 +1,7 @@
+{
+  "BaseUrl": "https://jsonplaceholder.typicode.com",
+  "NewUser": {
+    "name" : "John Doe",
+    "username" : "jdoe"
+  }
+}

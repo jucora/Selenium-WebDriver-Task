@@ -32,7 +32,6 @@ logs/
 Reports/
 *.trx
 *.xml
-*.json
 
 # Temporary files
 ~$*
