@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Reqnroll.Formatters.PayloadProcessing.Cucumber;
 using RestSharp;
 using System.Net;
-using TestAutomationFramework.Business.Api.DTO;
 using TestAutomationFramework.Core.Configuration.Api;
 using TestAutomationFramework.Core.Logging;
 

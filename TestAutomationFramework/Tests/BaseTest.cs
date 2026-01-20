@@ -14,6 +14,7 @@ namespace TestAutomationFramework.Tests
     /// SOLID - Open/Closed: Open for extension, closed for modification
     /// </summary>
     [TestFixture]
+    [Category("UI")]
     public abstract class BaseTest
     {
         protected IWebDriver Driver = null!;

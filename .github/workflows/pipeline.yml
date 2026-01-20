@@ -2,17 +2,17 @@
 
 on:
   pull_request:
-    branches: [ cicd ]
+    branches: [cicd]
 
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
   workflow_dispatch:
     inputs:
       browser:
-        description: 'Browser for UI tests'
+        description: "Browser for UI tests"
         required: true
-        default: 'chrome'
+        default: "chrome"
         type: choice
         options:
           - chrome
@@ -33,7 +33,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Restore dependencies
         run: dotnet restore
@@ -42,11 +42,11 @@ jobs:
         run: dotnet build --configuration Debug --no-restore
 
       - name: Run API tests
-        run: dotnet test --filter "Type=API"
+        run: dotnet test --filter "Category=API"
 
       - name: Run UI tests
         if: always()
-        run: dotnet test --filter "Type=UI"
+        run: dotnet test --filter "Category=UI"
 
       - name: Publish test artifacts
         if: always()
