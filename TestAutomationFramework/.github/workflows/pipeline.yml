@@ -1,0 +1,59 @@
+﻿name: CI - .NET API and UI Tests
+
+on:
+  pull_request:
+    branches: [ cicd ]
+
+  schedule:
+    - cron: '0 2 * * *'
+
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser for UI tests'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Debug --no-restore
+
+      - name: Run API tests
+        run: dotnet test --filter "Type=API"
+
+      - name: Run UI tests
+        if: always()
+        run: dotnet test --filter "Type=UI"
+
+      - name: Publish test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            bin/Debug/net8.0/Screenshots
+            bin/Debug/net8.0/logs
+            TestResults
