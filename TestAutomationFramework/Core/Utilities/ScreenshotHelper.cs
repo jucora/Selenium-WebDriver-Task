@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using TestAutomationFramework.Core.Configuration;
 using TestAutomationFramework.Core.Logging;
 
@@ -30,7 +31,9 @@ namespace TestAutomationFramework.Core.Utilities
         {
             try
             {
-                var safeTestName = FileNameHelper.Sanitize(testName);
+                var testContext = TestContext.CurrentContext.Test;
+                var rawName = $"{testContext.ID}_{testContext.FullName}";
+                var safeTestName = FileNameHelper.Sanitize(rawName);
 
                 logger.Info($"Capturing screenshot for test: {safeTestName}");
 
