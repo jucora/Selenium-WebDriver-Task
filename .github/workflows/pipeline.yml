@@ -1,8 +1,10 @@
-﻿name: CI - .NET API and UI Tests
+﻿name: CI - API and UI Tests
 
 on:
   pull_request:
-    branches: [cicd]
+    branches:
+      - main
+      - develop
 
   schedule:
     - cron: "0 2 * * *"
@@ -24,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      DOTNET_VERSION: "8.0.x"
       BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
 
     steps:
@@ -33,20 +36,36 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore TestAutomationFramework/TestAutomationFramework.csproj
 
-      - name: Build solution
-        run: dotnet build --configuration Debug --no-restore
+      - name: Build
+        run: dotnet build TestAutomationFramework/TestAutomationFramework.csproj --no-restore
 
       - name: Run API tests
-        run: dotnet test --filter "Category=API"
+        run: |
+          dotnet test TestAutomationFramework/TestAutomationFramework.csproj \
+            --filter "Category=API" \
+            --logger "trx;LogFileName=api-tests.trx" \
+            --results-directory TestResults
 
       - name: Run UI tests
         if: always()
-        run: dotnet test --filter "Category=UI"
+        run: |
+          dotnet test TestAutomationFramework/TestAutomationFramework.csproj \
+            --filter "Category=UI" \
+            --logger "trx;LogFileName=ui-tests.trx" \
+            --results-directory TestResults
+
+      - name: Debug generated files
+        if: always()
+        run: |
+          echo "=== TestResults ==="
+          ls -R TestResults || true
+          echo "=== Screenshots / Logs ==="
+          ls -R TestAutomationFramework || true
 
       - name: Publish test artifacts
         if: always()
@@ -54,6 +73,6 @@ jobs:
         with:
           name: test-artifacts
           path: |
-            TestAutomationFramework/bin/Debug/net8.0/Screenshots
-            TestAutomationFramework/bin/Debug/net8.0/logs
-            TestResults
+            TestResults/**
+            TestAutomationFramework/**/Screenshots/**
+            TestAutomationFramework/**/logs/**
