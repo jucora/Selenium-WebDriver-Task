@@ -54,6 +54,6 @@ jobs:
         with:
           name: test-artifacts
           path: |
-            bin/Debug/net8.0/Screenshots
+            TestAutomationFramework/bin/Debug/net8.0/Screenshots
             bin/Debug/net8.0/logs
             TestResults
