@@ -30,7 +30,9 @@ namespace TestAutomationFramework.Core.Utilities
         {
             try
             {
-                logger.Info($"Capturing screenshot for test: {testName}");
+                var safeTestName = FileNameHelper.Sanitize(testName);
+
+                logger.Info($"Capturing screenshot for test: {safeTestName}");
 
                 // Gets the base path from configuration
                 var screenshotPath = configuration.GetScreenshotPath();
@@ -44,7 +46,7 @@ namespace TestAutomationFramework.Core.Utilities
 
                 // Generates a filename with a timestamp
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                var fileName = $"{testName}_{timestamp}.png";
+                var fileName = $"{safeTestName}_{timestamp}.png";
                 var fullPath = Path.Combine(screenshotPath, fileName);
 
                 // Captures the screenshot
