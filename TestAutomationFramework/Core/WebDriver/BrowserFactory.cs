@@ -67,29 +67,68 @@ namespace TestAutomationFramework.Core.WebDriver
         /// Creates and configures a Chrome driver
         /// DRY Principle: Centralized configuration
         /// </summary>
+        //private IWebDriver CreateChromeDriver()
+        //{
+        //    var options = new ChromeOptions();
+
+        //    // Common Chrome options for tests
+        //    options.AddArgument("--start-maximized");
+        //    options.AddArgument("--disable-notifications");
+        //    options.AddArgument("--disable-popup-blocking");
+
+        //    // Configuration for automatic downloads without prompt
+        //    var downloadDir = DownloadsPath.DownloadFolder;
+        //    options.AddUserProfilePreference("download.default_directory", downloadDir);
+        //    options.AddUserProfilePreference("download.prompt_for_download", false);
+        //    options.AddUserProfilePreference("download.directory_upgrade", true);
+        //    options.AddUserProfilePreference("safebrowsing.enabled", true);
+
+        //    // For execution on servers without a graphical interface (CI/CD)
+        //    // options.AddArgument("--headless"); // Uncomment if headless mode is needed
+
+        //    logger.Debug("Configuring ChromeOptions with standard arguments");
+
+        //    return new ChromeDriver(options);
+        //}
+
         private IWebDriver CreateChromeDriver()
         {
             var options = new ChromeOptions();
 
-            // Common Chrome options for tests
-            options.AddArgument("--start-maximized");
+            bool isCI = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
+
+            logger.Info($"Running in CI: {isCI}");
+
+            if (isCI)
+            {
+                // Required for GitHub Actions / Linux runners
+                options.AddArgument("--headless=new");
+                options.AddArgument("--no-sandbox");
+                options.AddArgument("--disable-dev-shm-usage");
+                options.AddArgument("--disable-gpu");
+                options.AddArgument("--window-size=1920,1080");
+            }
+            else
+            {
+                // Local execution
+                options.AddArgument("--start-maximized");
+            }
+
             options.AddArgument("--disable-notifications");
             options.AddArgument("--disable-popup-blocking");
 
-            // Configuration for automatic downloads without prompt
+            // Downloads
             var downloadDir = DownloadsPath.DownloadFolder;
             options.AddUserProfilePreference("download.default_directory", downloadDir);
             options.AddUserProfilePreference("download.prompt_for_download", false);
             options.AddUserProfilePreference("download.directory_upgrade", true);
             options.AddUserProfilePreference("safebrowsing.enabled", true);
 
-            // For execution on servers without a graphical interface (CI/CD)
-            // options.AddArgument("--headless"); // Uncomment if headless mode is needed
-
-            logger.Debug("Configuring ChromeOptions with standard arguments");
+            logger.Debug("ChromeOptions configured successfully");
 
             return new ChromeDriver(options);
         }
+
 
         /// <summary>
         /// Creates and configures a Firefox driver
