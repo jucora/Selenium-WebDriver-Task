@@ -31,9 +31,7 @@ namespace TestAutomationFramework.Core.Utilities
         {
             try
             {
-                var testContext = TestContext.CurrentContext.Test;
-                var rawName = $"{testContext.ID}_{testContext.FullName}";
-                var safeTestName = FileNameHelper.Sanitize(rawName);
+                var safeTestName = TestNameHelper.GetSafeTestName();
 
                 logger.Info($"Capturing screenshot for test: {safeTestName}");
 
