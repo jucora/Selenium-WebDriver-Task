@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Reqnroll.Formatters.PayloadProcessing.Cucumber;
 using RestSharp;
 using System.Net;
+using TestAutomationFramework.Business.Api.DTO;
 using TestAutomationFramework.Core.Configuration.Api;
 using TestAutomationFramework.Core.Logging;
 
@@ -15,7 +17,7 @@ namespace TestAutomationFramework.Tests.ApiTests
     {
         private RestClient _client = null!;
         private ILogger Logger = null!;
-        private UsersApiClient _usersApi = null!;
+        private UsersApiClient _usersApiClient = null!;
         private readonly IApiConfiguration _apiConfiguration = ApiConfigurationManager.Instance;
 
         [OneTimeSetUp]
@@ -32,7 +34,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         public void Setup()
         {
             _client = new RestClient(_apiConfiguration.GetBaseUrl());
-            _usersApi = new UsersApiClient(_client);
+            _usersApiClient = new UsersApiClient(_client);
             Logger.Info("Test started");
         }
 
@@ -41,12 +43,11 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Sending GET /users");
 
-            var response = _usersApi.GetUsers();
+            var response = _usersApiClient.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var users = JsonConvert.DeserializeObject<List<UserDto>>(
-                response.Content ?? throw new InvalidOperationException("Response content is null"));
+            var users = _usersApiClient.GetUsersList(response);
 
             Assert.That(users, Is.Not.Null, "Users list is null");
             Assert.That(users, Is.Not.Empty, "Users list is empty");
@@ -78,7 +79,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Validating response headers");
 
-            var response = _usersApi.GetUsers();
+            var response = _usersApiClient.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
@@ -96,7 +97,7 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Validating users content");
 
-            var response = _usersApi.GetUsers();
+            var response = _usersApiClient.GetUsers();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
@@ -121,16 +122,15 @@ namespace TestAutomationFramework.Tests.ApiTests
         {
             Logger.Info("Creating new user");
 
-            var response = _usersApi.CreateUser(_apiConfiguration.GetTestUser());
+            var response = _usersApiClient.CreateUser();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
 
-            var json = JObject.Parse(
-                response.Content ?? throw new InvalidOperationException("Response content is null"));
+            var createdUser = _usersApiClient.GetCreatedUser(response);
 
-            Assert.That(json["id"], Is.Not.Null);
+            Assert.That(createdUser.Id, Is.Not.Null);
 
-            Logger.Info($"User created with ID: {json["id"]}");
+            Logger.Info($"User created with ID: {createdUser.Id}");
         }
 
         [Test]
