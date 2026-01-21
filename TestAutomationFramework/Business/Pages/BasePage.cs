@@ -211,16 +211,24 @@ namespace TestAutomationFramework.Business.Pages
 
         #endregion
 
-        private IReadOnlyCollection<IWebElement> WaitForAllElements(By locator)
-        {
-            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(Configuration.GetExplicitWait()));
-            return wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(locator));
-        }
-
         protected void ClickLast(By locator)
         {
-            var elements = WaitForAllElements(locator);
-            elements.Last().Click();
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(Configuration.GetExplicitWait()));
+            var elements = Driver.FindElements(locator);
+            var lastIndex = elements.Count - 1;
+
+            wait.Until(d =>
+            {
+                try
+                {
+                    d.FindElements(locator)[lastIndex].Click();
+                    return true;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
         }
     }
 }

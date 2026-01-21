@@ -6,7 +6,9 @@
   @careers @search
   Scenario Outline: Validate user can search positions based on criteria
     Given the user is on the Careers page
-    When the user enters the keyword "<keyword>"
+	When the user clicks the start search link
+    And the user accepts cookies
+    And the user enters the keyword "<keyword>"
     And the user selects remote option
     And the user selects a location
     And the user clicks Find Jobs

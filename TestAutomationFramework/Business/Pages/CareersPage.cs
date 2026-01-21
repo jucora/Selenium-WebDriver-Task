@@ -5,29 +5,21 @@ namespace TestAutomationFramework.Business.Pages
 {
     public class CareersPage : BasePage
     {
-        private static string selectedLocation = string.Empty;
+        private readonly By StartSearchLink = 
+            By.CssSelector("div[class='pinned-button'] a[class='button-body']");
 
         private readonly By KeywordsField =
-            By.Id("new_form_job_search-keyword");
-
-        private readonly By LocationField =
-            By.XPath($"//li[contains(@class, 'select2-results__option') and normalize-space(text())='{selectedLocation}']");
-
-        private readonly By LocationDropdown =
-            By.CssSelector(".select2-selection__rendered");
+            By.Name("search");
 
         private readonly By RemoteOption =
-            By.CssSelector("label[for='id-93414a92-598f-316d-b965-9eb0dfefa42d-remote']");
+            By.XPath("//label[contains(@for,'checkbox-vacancy_type-Remote-')]");
+
+        private readonly By LocationDropDownX =
+            By.CssSelector(
+                ".Dropdown_defaultOption__pvL_3.ym-disable-keys.dropdown__indicator.Dropdown_defaultOption__pvL_3.ym-disable-keys.dropdown__clear-indicator.css-1xc3v61-indicatorContainer");
 
         private readonly By FindButton =
-            By.CssSelector("button[type='submit']");
-
-        private static void SetLocation(string location)
-        {
-            selectedLocation = location;
-        }
-
-        private const string Location = "All Locations";
+            By.CssSelector("button[name='submit_search_box_button']");
 
         /// <summary>
         /// Constructor that calls the base constructor
@@ -37,30 +29,27 @@ namespace TestAutomationFramework.Business.Pages
             Logger.Info("CareersPage initialized");
         }
 
+        public CareersPage ClickStartSearchLink()
+        {
+            Click(StartSearchLink, "Start your search here link");
+            return this;
+        }
+
         public CareersPage EnterKeyword(string keyword)
         {
             SendKeys(KeywordsField, keyword, "Keyword or job ID input");
             return this;
         }
 
-        public CareersPage SelectLocation()
-        {
-            SetLocation(Location);
-           
-            selectedLocation = GetText(LocationDropdown); // revisar
-
-            if (!selectedLocation.Contains(Location, StringComparison.OrdinalIgnoreCase))
-            {
-                Click(LocationDropdown);
-                Click(LocationField);
-            }
-
-            return this;
-        }
-
         public CareersPage SelectRemoteOption()
         {
             Click(RemoteOption);
+            return this;
+        }
+
+        public CareersPage cleanLocationFilter()
+        {
+            Click(LocationDropDownX);
             return this;
         }
 

@@ -13,10 +13,15 @@ namespace SearchAutomation.Tests
         public void ValidateUserCanSearchPositionBasedOnCriteria(string keyword)
         {
             CareersPage careersPage = navbar.ClickCareersLink();
+            
             careersPage
-                .EnterKeyword(keyword)
+                .ClickStartSearchLink();
+
+            cookies.AcceptCookiesIfPresent();
+
+            careersPage.EnterKeyword(keyword)
                 .SelectRemoteOption()
-                .SelectLocation();
+                .cleanLocationFilter();
 
             JobListingsPage jobListingsPage = careersPage.ClickFindButton();
             jobListingsPage

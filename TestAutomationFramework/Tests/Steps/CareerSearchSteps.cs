@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Reqnroll;
+using TestAutomationFramework.Business.Components;
 using TestAutomationFramework.Business.Pages;
 using TestAutomationFramework.Tests.Context;
 
@@ -24,6 +25,18 @@ namespace TestAutomationFramework.Tests.Steps
             careersPage = context.Navbar.ClickCareersLink();
         }
 
+        [When("the user clicks the start search link")]
+        public void WhenTheUserClicksTheStartSearchLink()
+        {
+            careersPage.ClickStartSearchLink();
+        }
+
+        [When("the user accepts cookies")]
+        public void AcceptCookies()
+        {
+            this.context.Cookies.AcceptCookiesIfPresent();
+        }
+
         [When("the user enters the keyword \"(.*)\"")]
         public void WhenTheUserEntersTheKeyword(string keyword)
         {
@@ -39,7 +52,7 @@ namespace TestAutomationFramework.Tests.Steps
         [When("the user selects a location")]
         public void WhenTheUserSelectsLocation()
         {
-            careersPage.SelectLocation();
+            careersPage.cleanLocationFilter();
         }
 
         [When("the user clicks Find Jobs")]

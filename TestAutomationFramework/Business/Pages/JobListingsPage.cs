@@ -6,7 +6,7 @@ namespace TestAutomationFramework.Business.Pages
     public class JobListingsPage : BasePage
     {
         private static readonly By JobResults =
-            By.XPath("//a[contains(text(),'View and apply')]");
+            By.XPath("(//div[@class='JobCard_panel__gTD7e'])");
 
         /// <summary>
         /// Constructor that calls the base constructor

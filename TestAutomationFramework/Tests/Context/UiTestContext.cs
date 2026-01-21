@@ -9,6 +9,7 @@ namespace TestAutomationFramework.Tests.Context
 
     public class UiTestContext
     {
+        public CookiesComponent Cookies { get; set; } = null!;
         public IWebDriver Driver { get; set; } = null!;
         public ILogger Logger { get; set; } = null!;
         public NavbarComponent Navbar { get; set; } = null!;

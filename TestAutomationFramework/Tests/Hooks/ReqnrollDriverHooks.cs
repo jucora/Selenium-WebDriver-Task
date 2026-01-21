@@ -36,6 +36,7 @@ namespace TestAutomationFramework.Tests.Hooks
 
             var context = new UiTestContext
             {
+                Cookies = cookies,
                 Driver = driver,
                 Logger = logger,
                 Navbar = new NavbarComponent(driver, logger),
