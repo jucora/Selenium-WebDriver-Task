@@ -1,5 +1,5 @@
 ﻿using OpenQA.Selenium;
-using TestAutomationFramework.Core.Configuration;
+using TestAutomationFramework.Core.Configuration.Ui;
 using TestAutomationFramework.Core.Enums;
 using TestAutomationFramework.Core.Logging;
 

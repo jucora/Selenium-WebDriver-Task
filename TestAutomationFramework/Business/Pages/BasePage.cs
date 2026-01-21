@@ -3,8 +3,8 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using TestAutomationFramework.Core.Logging;
 using TestAutomationFramework.Core.Utilities;
-using ConfigurationManager = TestAutomationFramework.Core.Configuration.ConfigurationManager;
-using IConfiguration = TestAutomationFramework.Core.Configuration.IConfiguration;
+using ConfigurationManager = TestAutomationFramework.Core.Configuration.Ui.ConfigurationManager;
+using IConfiguration = TestAutomationFramework.Core.Configuration.Ui.IConfiguration;
 
 namespace TestAutomationFramework.Business.Pages
 {
