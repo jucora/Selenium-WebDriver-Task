@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using TestAutomationFramework.Core.Configuration;
+using TestAutomationFramework.Core.Configuration.Ui;
 using TestAutomationFramework.Core.Logging;
 
 namespace TestAutomationFramework.Core.Utilities

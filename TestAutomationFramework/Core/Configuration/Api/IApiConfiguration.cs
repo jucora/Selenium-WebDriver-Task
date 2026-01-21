@@ -6,6 +6,5 @@
     public interface IApiConfiguration
     {
         string GetBaseUrl();
-        string GetTestUser();
     }
 }
