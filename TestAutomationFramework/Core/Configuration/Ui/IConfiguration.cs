@@ -1,4 +1,4 @@
-﻿namespace TestAutomationFramework.Core.Configuration
+﻿namespace TestAutomationFramework.Core.Configuration.Ui
 {
     /// <summary>
     /// Interface that defines the methods for obtaining the framework configuration

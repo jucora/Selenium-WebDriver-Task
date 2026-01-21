@@ -1,4 +1,4 @@
-﻿namespace TestAutomationFramework.Core.Configuration
+﻿namespace TestAutomationFramework.Core.Configuration.Ui
 {
     public sealed class ConfigurationManager : BaseConfigurationManager, IConfiguration
     {
