@@ -1,7 +1,7 @@
 ﻿using Reqnroll;
 using Reqnroll.BoDi;
 using TestAutomationFramework.Business.Components;
-using TestAutomationFramework.Core.Configuration;
+using TestAutomationFramework.Core.Configuration.Ui;
 using TestAutomationFramework.Core.Logging;
 using TestAutomationFramework.Core.Utilities;
 using TestAutomationFramework.Core.WebDriver;

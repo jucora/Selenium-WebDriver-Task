@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using TestAutomationFramework.Core.Configuration;
+using TestAutomationFramework.Core.Configuration.Ui;
 using TestAutomationFramework.Core.Logging;
 using TestAutomationFramework.Core.Utilities;
 using TestAutomationFramework.Core.WebDriver;
