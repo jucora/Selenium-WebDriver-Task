@@ -137,24 +137,29 @@ namespace TestAutomationFramework.Core.WebDriver
         {
             var options = new FirefoxOptions();
 
-            // Common Firefox options
-            options.AddArgument("--width=1920");
-            options.AddArgument("--height=1080");
+            bool isCI = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
 
-            // Configuration for automatic downloads without prompt
+            logger.Info($"Running Firefox in CI: {isCI}");
+
+            if (isCI)
+            {
+                options.AddArgument("--headless");
+                options.AddArgument("--width=1920");
+                options.AddArgument("--height=1080");
+            }
+
+            // Downloads
             var downloadDir = DownloadsPath.DownloadFolder;
             options.SetPreference("browser.download.folderList", 2);
             options.SetPreference("browser.download.dir", downloadDir);
             options.SetPreference("browser.download.useDownloadDir", true);
-
-            // Avoid "save as" popup
-            options.SetPreference("browser.helperApps.neverAsk.saveToDisk",
-                "application/pdf,application/octet-stream,application/vnd.ms-excel,application/zip");
-
-            // Disable internal PDF viewer so files are downloaded
+            options.SetPreference(
+                "browser.helperApps.neverAsk.saveToDisk",
+                "application/pdf,application/octet-stream,application/vnd.ms-excel,application/zip"
+            );
             options.SetPreference("pdfjs.disabled", true);
 
-            logger.Debug("Configuring FirefoxOptions with standard arguments");
+            logger.Debug("FirefoxOptions configured successfully");
 
             return new FirefoxDriver(options);
         }
