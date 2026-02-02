@@ -171,11 +171,26 @@ namespace TestAutomationFramework.Core.WebDriver
         {
             var options = new EdgeOptions();
 
-            // Common Edge options
-            options.AddArgument("--start-maximized");
+            bool isCI = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
+
+            logger.Info($"Running Edge in CI: {isCI}");
+
+            if (isCI)
+            {
+                options.AddArgument("--headless=new");
+                options.AddArgument("--no-sandbox");
+                options.AddArgument("--disable-dev-shm-usage");
+                options.AddArgument("--disable-gpu");
+                options.AddArgument("--window-size=1920,1080");
+            }
+            else
+            {
+                options.AddArgument("--start-maximized");
+            }
+
             options.AddArgument("--disable-notifications");
 
-            logger.Debug("Configuring EdgeOptions with standard arguments");
+            logger.Debug("EdgeOptions configured successfully");
 
             return new EdgeDriver(options);
         }
